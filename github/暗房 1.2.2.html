@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="darkroom-version" content="1.2.2">
+<meta name="darkroom-release" content="2026-11-02">
 <title>暗房画廊 · Darkroom Gallery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -587,6 +589,7 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 
 .footer{margin-top:100px;padding:34px 0 10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:11.5px;color:rgba(155,150,140,.7);letter-spacing:.12em;}
 .footer a:hover{color:var(--cream);}
+.footer .foot-ver{font-family:var(--mono);font-size:11px;letter-spacing:.1em;opacity:.6;margin-left:2px;cursor:default;}
 
 .trash-days{position:absolute;top:8px;right:8px;z-index:2;font-size:10px;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;letter-spacing:.06em;}
 .trash-actions{position:absolute;bottom:8px;right:8px;display:flex;gap:6px;z-index:3;}
@@ -945,6 +948,9 @@ const appRoot = document.querySelector('#app');
 const navEl = $('#nav');
 const lbEl = $('#lightbox');
 const editorEl = $('#editor');
+/* 版本标识：改版时同步更新这两行，页面页脚与「关于」页都会显示 */
+const APP_VERSION = '1.2.2';
+const APP_RELEASE = '2026-11-02';
 
 function localDateStr(d) {
   const dt = d || new Date();
@@ -3608,7 +3614,7 @@ function renderHome() {
     </section>
     <footer class="footer">
       <span>DARKROOM · 暗房画廊 — 本地存储，纯粹私人</span>
-      <span><a href="#/about">关于</a> · <a href="#/upload">上传</a></span>
+      <span><a href="#/about">关于</a> · <a href="#/upload">上传</a> · <span class="foot-ver" title="当前版本 ${APP_VERSION}（${APP_RELEASE}）">v${APP_VERSION}</span></span>
     </footer>
   </div>`;
 
@@ -4522,6 +4528,7 @@ function renderAbout() {
         <p style="margin:0 0 12px">上传「拍立得」或「胶卷」类型时，会自动归入同类型相册。如果已有同名相册，会询问是合并还是新建独立相册。</p>
         <p style="margin:0 0 12px">避免在多个浏览器标签同时编辑照片，可能导致数据不一致。</p>
         <p style="margin:0">删除的照片会先进入 <a href="#/trash" style="color:var(--orange)">回收站</a>，超过保留期后自动清理。</p>
+        <p style="margin:16px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;opacity:.62">版本 v${APP_VERSION} · ${APP_RELEASE}</p>
       </div>
       <div class="stat-grid">
         <div class="stat-card glass" style="border-radius:16px;padding:22px;text-align:center"><div class="stat-num">${photoCount}</div><div class="stat-label">PHOTOS</div></div>

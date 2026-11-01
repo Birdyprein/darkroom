@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="darkroom-version" content="1.2.2">
+<meta name="darkroom-version" content="1.3.0">
 <meta name="darkroom-release" content="2026-11-02">
 <title>暗房画廊 · Darkroom Gallery</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='45%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%23FFF8EC'/%3E%3Cstop offset='28%25' stop-color='%23E08A4E'/%3E%3Cstop offset='62%25' stop-color='%239E4E2A'/%3E%3Cstop offset='100%25' stop-color='%23171719'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23171719'/%3E%3Ccircle cx='32' cy='32' r='19' fill='url(%23g)'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23D08150' stroke-width='1.4' opacity='.5'/%3E%3Ccircle cx='32' cy='31.4' r='4.6' fill='%23FFFDF7' opacity='.97'/%3E%3C/svg%3E">
@@ -916,8 +916,15 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 
 <script>
 /* ============================================================
- * 暗房画廊 Darkroom Gallery · v1.2.2
- * 2026-11-01 修复：
+ * 暗房画廊 Darkroom Gallery · v1.3.0
+ * 2026-11-02 更新：
+ *  - 新增：导出备份分「只导新增与修改 / 全部导出」，换设备时只导新照片，文件更小
+ *  - 新增：导入默认「合并」——已有的照片自动跳过，不会产生重复；备份里更新过的版本才覆盖
+ *  - 新增：导入后自动清理新设备自带的示例照片
+ *  - 修复：导入「跳过重复」策略下，照片的相册归属会被清空（相册映射缺失）
+ *  - 优化：内置相册内容一致时不再弹「相册重复」确认框
+ *  - 说明：曾尝试接入 Supabase 做自动同步，因该域名在本机网络被阻断而撤除，改为手动导出/导入搬家
+ * 2026-11-01 v1.2.2 修复：
  *  - 修复：新建同名相册时跳转链接错误（#/album/xxx 应为 #/album?id=xxx），导致页面回退到首页
  *  - 修复：导入备份「另存为新的」策略下，相册封面 coverId 未随 id 重映射，导致封面失效
  *  - 修复：多选模式下点击首页「今日胶片」卡片无法选中、而是直接打开灯箱
@@ -951,7 +958,7 @@ const navEl = $('#nav');
 const lbEl = $('#lightbox');
 const editorEl = $('#editor');
 /* 版本标识：改版时同步更新这两行，页面页脚与「关于」页都会显示 */
-const APP_VERSION = '1.2.2';
+const APP_VERSION = '1.3.0';
 const APP_RELEASE = '2026-11-02';
 
 function localDateStr(d) {
@@ -4525,7 +4532,7 @@ function renderAbout() {
       </div>
       <div class="panel glass" style="line-height:2;font-size:14px;color:var(--muted);border-radius:18px;padding:24px">
         <p style="margin:0 0 14px;color:var(--cream);font-family:var(--serif);font-size:19px;letter-spacing:.05em">照片只存在于你自己的浏览器里。</p>
-        <p style="margin:0 0 12px">这个站点使用 IndexedDB 在本地存储照片与相册信息，没有后端、没有账号、没有上传到任何服务器。</p>
+        <p style="margin:0 0 12px">默认情况下，这个站点使用 IndexedDB 在本地存储照片与相册信息，没有后端、没有账号、不会上传到任何服务器。</p>
         <p style="margin:0 0 12px">清理浏览器数据、更换设备或使用隐私模式，都可能让照片消失。建议定期到「上传」页导出备份。</p>
         <p style="margin:0 0 12px">上传「拍立得」或「胶卷」类型时，会自动归入同类型相册。如果已有同名相册，会询问是合并还是新建独立相册。</p>
         <p style="margin:0 0 12px">避免在多个浏览器标签同时编辑照片，可能导致数据不一致。</p>
@@ -4714,7 +4721,7 @@ function renderUpload() {
       <div class="page-head">
         <a href="${backHref}" class="back-btn" aria-label="返回${backLabel}"><span class="back-arrow" aria-hidden="true">←</span>${backLabel}</a>
         <h1 style="margin-top:18px">上传 / 管理</h1>
-        <p class="page-desc">照片压缩后存入本地 IndexedDB</p>
+        <p class="page-desc">照片压缩后存入本地 IndexedDB · 换设备用「导出 / 导入备份」搬过去</p>
       </div>
       <div class="head-actions">
         <button class="glass-btn" id="exportBtn2">导出备份 JSON</button>
@@ -5657,20 +5664,65 @@ $('#edSave').addEventListener('click', () => {
 });
 
 /* 25. 备份 */
+/* 导出状态：记录每张照片上次导出时的 updatedAt，用于「只导新增与修改」 */
+let exportState = { exported: {}, lastAt: 0 };
+async function loadExportState() {
+  try {
+    const rec = await idbGet('settings', 'exportState');
+    if (rec && rec.value && typeof rec.value === 'object') {
+      exportState = { exported: rec.value.exported || {}, lastAt: rec.value.lastAt || 0 };
+    }
+  } catch (e) {}
+}
+async function saveExportState() {
+  try { await idbPut('settings', { key: 'exportState', value: exportState }); } catch (e) {}
+}
+function photoBytesOf(list) {
+  let n = 0;
+  for (const p of list) n += (p.blob?.size || 0) + (p.videoBlob?.size || 0) + (p.coverBlob?.size || 0) + (p.originalBlob?.size || 0);
+  return n;
+}
+const mbText = n => n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+
 async function exportBackup() {
-  if (!state.photos.length) return toast('图库为空，没有可导出的照片');
-  // 体积预估：原始二进制 × 约 1.37（base64 膨胀），超过阈值先确认，避免浏览器无提示卡死
-  let rawBytes = 0;
-  for (const p of state.photos) {
-    rawBytes += (p.blob?.size || 0) + (p.videoBlob?.size || 0) + (p.coverBlob?.size || 0) + (p.originalBlob?.size || 0);
-  }
-  const estMB = Math.round(rawBytes * 1.37 / 1048576);
+  const exportable = state.photos.filter(p => !String(p.id).startsWith('seed-'));
+  if (!exportable.length) return toast(state.photos.length ? '只有示例照片，没有你自己的照片可导出' : '图库为空，没有可导出的照片');
+  const pending = exportable.filter(p => exportState.exported[p.id] !== p.updatedAt);
+  const lastAt = exportState.lastAt ? new Date(exportState.lastAt).toLocaleString('zh-CN', { hour12: false }) : '';
+  const pendingMB = photoBytesOf(pending) * 1.37;
+  const allMB = photoBytesOf(exportable) * 1.37;
+
+  const choice = await new Promise(resolve => {
+    const done = v => resolve(v);
+    const { close, root } = makeModal(`
+      <h3>导出备份</h3>
+      <p style="color:var(--muted);font-size:13px;line-height:1.8;margin:0 0 14px">换设备时：在旧设备导出，把文件传到新设备，在新设备的「上传 / 管理」页点「导入备份 JSON」。已有的照片会自动跳过，不会重复。</p>
+      <div class="modal-actions" style="flex-direction:column;gap:8px">
+        <button class="btn-primary" data-act="delta" style="width:100%" ${pending.length ? '' : 'disabled'}>只导新增与修改 · ${pending.length} 张${pending.length ? ' · 约 ' + mbText(pendingMB) : '（已全部导出过）'}</button>
+        <button class="btn-ghost" data-act="full" style="width:100%">全部导出 · ${exportable.length} 张 · 约 ${mbText(allMB)}</button>
+        <button class="btn-ghost" data-act="cancel" style="width:100%">取消</button>
+      </div>
+      ${lastAt ? `<p style="color:var(--muted);font-size:11.5px;margin:12px 0 0;opacity:.75">上次导出：${lastAt}</p>` : ''}`);
+    if (!root) { done(null); return; }
+    root.addEventListener('click', e => {
+      const act = e.target.closest('[data-act]')?.dataset.act;
+      if (!act) return;
+      close();
+      done(act);
+    });
+  });
+  if (!choice || choice === 'cancel') return;
+
+  const list = choice === 'delta' ? pending : exportable;
+  if (!list.length) return toast('没有需要导出的照片');
+
+  const estMB = Math.round(photoBytesOf(list) * 1.37 / 1048576);
   if (estMB > 120) {
-    const confirmed = await new Promise(resolve => {
+    const ok = await new Promise(resolve => {
       const { close, root } = makeModal(`
         <h3>备份体积较大</h3>
-        <p style="color:var(--muted);font-size:13.5px;line-height:1.9;margin:0 0 6px">本次备份预估约 <strong style="color:var(--cream)">${estMB} MB</strong>（含修图原图备份）。</p>
-        <p style="color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 12px">导出过程中浏览器可能短暂卡顿，请保持页面不要关闭。</p>
+        <p style="color:var(--muted);font-size:13.5px;line-height:1.9;margin:0 0 6px">本次要导出 <strong style="color:var(--cream)">${list.length} 张</strong>，预计约 <strong style="color:var(--cream)">${estMB} MB</strong>。</p>
+        <p style="color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 12px">导出过程中浏览器可能短暂卡顿、占用较多内存，请保持页面不要关闭。如果失败，可以用「只导新增与修改」分批导出。</p>
         <div class="modal-actions"><button class="btn-ghost" data-act="cancel">取消</button><button class="btn-primary" data-act="ok">继续导出</button></div>`);
       if (!root) { resolve(false); return; }
       root.addEventListener('click', e => {
@@ -5679,14 +5731,15 @@ async function exportBackup() {
         if (act === 'ok') { close(); resolve(true); }
       });
     });
-    if (!confirmed) return;
+    if (!ok) return;
   }
-  showUploadProgress('正在导出备份…');
+
+  showUploadProgress(choice === 'delta' ? '正在导出新增照片…' : '正在导出备份…');
   try {
     const exported = [];
-    const total = state.photos.length;
+    const total = list.length;
     for (let i = 0; i < total; i++) {
-      const p = state.photos[i];
+      const p = list[i];
       const o = { ...p };
       if (p.blob) { o.blobData = await blobToDataURL(p.blob); delete o.blob; }
       if (p.originalBlob) { o.originalBlobData = await blobToDataURL(p.originalBlob); delete o.originalBlob; }
@@ -5695,7 +5748,7 @@ async function exportBackup() {
       exported.push(o);
       setUploadProgress((i + 1) / total * 90);
     }
-    const payload = { app: 'darkroom-gallery', version: 3, exportedAt: new Date().toISOString(),
+    const payload = { app: 'darkroom-gallery', version: 3, mode: choice, exportedAt: new Date().toISOString(),
       filmSim: state.settings.filmSim,
       albums: state.albums, sceneTypes: state.sceneTypes,
       homeSort: state.settings.homeSort, trashRetentionDays: state.settings.trashRetentionDays,
@@ -5705,14 +5758,18 @@ async function exportBackup() {
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = `darkroom-backup-${localDateStr()}.json`;
+    a.href = url;
+    a.download = `darkroom-${choice === 'delta' ? 'update' : 'backup'}-${localDateStr()}.json`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
     setUploadProgress(100);
-    toast(`备份已导出：${exported.length} 张 · 约 ${(blob.size / 1048576).toFixed(1)} MB`);
+    for (const p of list) exportState.exported[p.id] = p.updatedAt;
+    exportState.lastAt = Date.now();
+    await saveExportState();
+    toast(`已导出 ${exported.length} 张 · ${mbText(blob.size)}`);
   } catch (err) {
     console.warn(err);
-    toast('导出失败：' + (err.message || '存储空间不足或数据过大，建议分批整理后再导出'));
+    toast('导出失败：' + (err.message || '存储空间不足或数据过大，可以用「只导新增与修改」分批导出'));
   } finally {
     setTimeout(hideUploadProgress, 700);
   }
@@ -5776,20 +5833,34 @@ async function importBackup(file) {
   }
 
   const existPhotoIds = new Set(state.photos.map(p => p.id));
-  const conflictPhotos = validPhotos.filter(p => existPhotoIds.has(p.id));
-  const conflictAlbums = validAlbums.filter(a => state.albums.some(x => x.id === a.id));
+  const localFp = new Map();
+  state.photos.forEach(p => { if (p.fingerprint) localFp.set(p.fingerprint, p.id); });
+  const wasSeedOnly = state.photos.length > 0 && state.photos.every(p => String(p.id).startsWith('seed-'));
+  const conflictPhotos = validPhotos.filter(p => existPhotoIds.has(p.id) || (p.fingerprint && localFp.has(p.fingerprint)));
+  // 只有内容真的不一样才算相册冲突（内置相册两台设备都有，内容相同就不该弹窗）
+  const conflictAlbums = validAlbums.filter(a => {
+    const l = state.albums.find(x => x.id === a.id);
+    if (!l) return false;
+    return l.name !== a.name || String(l.desc || '') !== String(a.desc || '') || (l.password || null) !== (a.password || null);
+  });
 
-  // 3) 存在重复数据时让用户选择策略；无冲突时直接覆盖式合并（新 id 不影响现有数据）
-  let strategy = 'overwrite';
+  // 3) 有重复时才询问；默认策略是「合并」，不会产生重复照片
+  let strategy = 'smart';
   if (conflictPhotos.length || conflictAlbums.length) {
+    const newerCount = validPhotos.filter(p => {
+      if (!existPhotoIds.has(p.id)) return false;
+      const local = state.photos.find(x => x.id === p.id);
+      return local && (p.updatedAt || 0) > (local.updatedAt || 0);
+    }).length;
     strategy = await new Promise(resolve => {
       const { close, root } = makeModal(`
-        <h3>导入备份 · 处理重复数据</h3>
-        <p style="color:var(--muted);font-size:13px;line-height:1.8;margin:0 0 8px">备份包含 <strong style="color:var(--cream)">${validPhotos.length}</strong> 张照片、<strong style="color:var(--cream)">${validAlbums.length}</strong> 个相册；其中与当前库重复的照片 ${conflictPhotos.length} 张、相册 ${conflictAlbums.length} 个。</p>
+        <h3>导入备份</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.8;margin:0 0 6px">备份里有 <strong style="color:var(--cream)">${validPhotos.length}</strong> 张照片、<strong style="color:var(--cream)">${validAlbums.length}</strong> 个相册；和图库里已有的重复 ${conflictPhotos.length} 张、相册 ${conflictAlbums.length} 个。</p>
+        <p style="color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 14px">${newerCount ? `其中 ${newerCount} 张在备份里更新过。` : '重复的照片在备份里没有更新的版本。'}</p>
         <div class="modal-actions" style="flex-direction:column;gap:8px">
-          <button class="btn-primary" data-act="overwrite" style="width:100%">覆盖重复项（以备份为准）</button>
-          <button class="btn-primary" data-act="skip" style="width:100%">跳过重复项，只导入新内容</button>
-          <button class="btn-ghost" data-act="new" style="width:100%">重复项也作为新内容导入（生成新编号）</button>
+          <button class="btn-primary" data-act="smart" style="width:100%">合并（推荐）· 只补新的，不产生重复</button>
+          <button class="btn-ghost" data-act="overwrite" style="width:100%">全部以备份为准</button>
+          <button class="btn-ghost" data-act="new" style="width:100%">重复的另存为新照片</button>
           <button class="btn-ghost" data-act="cancel" style="width:100%">取消导入</button>
         </div>`);
       if (!root) { resolve('cancel'); return; }
@@ -5797,7 +5868,7 @@ async function importBackup(file) {
         const act = e.target.closest('[data-act]')?.dataset.act;
         if (!act) return;
         close();
-        resolve(act === 'cancel' ? 'cancel' : act);
+        resolve(act);
       });
     });
     if (strategy === 'cancel') { toast('已取消导入'); return; }
@@ -5808,8 +5879,13 @@ async function importBackup(file) {
   let albumAdded = 0, albumSkipped = 0;
   for (const a of validAlbums) {
     const oldId = a.id;
-    const exist = state.albums.some(x => x.id === oldId);
-    if (exist && strategy === 'skip') { albumSkipped++; continue; }
+    const exist = state.albums.find(x => x.id === oldId);
+    if (exist && (strategy === 'smart' || strategy === 'skip')) {
+      const identical = exist.name === a.name && String(exist.desc || '') === String(a.desc || '') && (exist.password || null) === (a.password || null);
+      albumIdMap.set(oldId, oldId);          // 已有的相册原样保留，照片引用保持不变
+      if (!identical) albumSkipped++;
+      continue;
+    }
     if (exist && strategy === 'new') a.id = 'al' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     if (!a.id) a.id = 'al' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     albumIdMap.set(oldId, a.id);
@@ -5818,19 +5894,29 @@ async function importBackup(file) {
   }
 
   // 5) 写照片（并记录 oldPhotoId -> newPhotoId，用于后续修正相册封面）
-  let added = 0, skipped = 0, failed = 0;
+  let added = 0, skipped = 0, updatedN = 0, failed = 0;
   const photoIdMap = new Map();
   for (const o of validPhotos) {
     const oldId = o.id;
-    const exist = existPhotoIds.has(oldId);
-    if (exist && strategy === 'skip') { skipped++; continue; }
-    if ((exist && strategy === 'new') || (!exist && typeof oldId !== 'string')) {
-      o.id = 'ph' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const existById = existPhotoIds.has(oldId);
+    const fpOwner = o.fingerprint ? localFp.get(o.fingerprint) : null;
+    const dupByFp = !existById && !!fpOwner;      // id 不同但其实是同一张照片
+
+    if (existById) {
+      const local = state.photos.find(x => x.id === oldId);
+      if (strategy === 'skip') { skipped++; continue; }
+      if (strategy === 'smart' && (!local || (o.updatedAt || 0) <= (local.updatedAt || 0))) { skipped++; continue; }
+      if (strategy === 'new') o.id = 'ph' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    } else if (dupByFp && strategy !== 'new') {
+      skipped++; continue;
     }
+
+    if (!existById && typeof oldId !== 'string') o.id = 'ph' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     if (o.albumId) o.albumId = albumIdMap.get(o.albumId) || null;
     if (Array.isArray(o.extraAlbumIds)) o.extraAlbumIds = o.extraAlbumIds.map(id => albumIdMap.get(id)).filter(Boolean);
+    const isUpdate = existById && o.id === oldId;
     photoIdMap.set(oldId, o.id);
-    try { await idbPut('photos', o); added++; }
+    try { await idbPut('photos', o); if (isUpdate) updatedN++; else added++; }
     catch (e) { console.warn(e); failed++; }
   }
 
@@ -5853,10 +5939,23 @@ async function importBackup(file) {
   if (typeof data.heroTitle === 'string') { state.settings.heroTitle = data.heroTitle; await idbPut('settings', { key: 'heroTitle', value: data.heroTitle }).catch(() => {}); }
   if (typeof data.heroSub === 'string') { state.settings.heroSub = data.heroSub; await idbPut('settings', { key: 'heroSub', value: data.heroSub }).catch(() => {}); }
 
+  // 新设备第一次导入：本地原本只有示例照片，导入真实照片后把示例清掉
+  let seedRemoved = 0;
+  if (wasSeedOnly && added > 0) {
+    for (const p of state.photos.filter(x => String(x.id).startsWith('seed-'))) {
+      try { await idbDel('photos', p.id); seedRemoved++; } catch (e) {}
+      revokePhotoURL(p.id);
+    }
+  }
+
   state.photos = await idbAll('photos'); state.albums = await idbAll('albums');
   await idbPut('settings', { key: 'seeded', value: true }).catch(() => {});
-  let summary = `导入完成：新增 ${added} 张${skipped ? `，跳过重复 ${skipped} 张` : ''}；相册写入 ${albumAdded} 个`;
+  let summary = `导入完成：新增 ${added} 张`;
+  if (updatedN) summary += `，更新 ${updatedN} 张`;
+  if (skipped) summary += `，跳过已有 ${skipped} 张`;
+  if (albumAdded) summary += `；相册写入 ${albumAdded} 个`;
   if (albumSkipped) summary += `，跳过相册 ${albumSkipped} 个`;
+  if (seedRemoved) summary += `；已移除 ${seedRemoved} 张示例照片`;
   if (badRecords) summary += `；丢弃损坏记录 ${badRecords} 条`;
   if (failed) summary += `；写入失败 ${failed} 张`;
   toast(summary);
@@ -5976,6 +6075,7 @@ async function boot() {
       navigator.storage.persisted().then(already => { if (!already) navigator.storage.persist().catch(() => {}); }).catch(() => {});
     }
     await openDB();
+    await loadExportState();
     state.photos = await idbAll('photos'); state.albums = await idbAll('albums');
     const seeded = await idbGet('settings', 'seeded');
     if (!seeded) {

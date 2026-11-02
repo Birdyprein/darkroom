@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="darkroom-version" content="1.3.0">
+<meta name="darkroom-version" content="1.4.0">
 <meta name="darkroom-release" content="2026-11-02">
+<meta name="darkroom-build" content="2026-11-02 22:13">
 <title>暗房画廊 · Darkroom Gallery</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='45%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%23FFF8EC'/%3E%3Cstop offset='28%25' stop-color='%23E08A4E'/%3E%3Cstop offset='62%25' stop-color='%239E4E2A'/%3E%3Cstop offset='100%25' stop-color='%23171719'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23171719'/%3E%3Ccircle cx='32' cy='32' r='19' fill='url(%23g)'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23D08150' stroke-width='1.4' opacity='.5'/%3E%3Ccircle cx='32' cy='31.4' r='4.6' fill='%23FFFDF7' opacity='.97'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#161618">
@@ -591,7 +592,26 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 
 .footer{margin-top:100px;padding:34px 0 10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:11.5px;color:rgba(155,150,140,.7);letter-spacing:.12em;}
 .footer a:hover{color:var(--cream);}
-.footer .foot-ver{font-family:var(--mono);font-size:11px;letter-spacing:.1em;opacity:.6;margin-left:2px;cursor:default;}
+.footer .foot-ver{font-family:var(--mono);font-size:11px;letter-spacing:.1em;opacity:.6;margin-left:2px;color:inherit;text-decoration:none;transition:opacity .22s,color .22s;}
+.footer .foot-ver:hover{opacity:1;color:var(--orange);text-decoration:none;}
+.foot-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--orange);margin-left:6px;vertical-align:middle;box-shadow:0 0 7px rgba(196,106,59,.85);animation:footDotPulse 2.4s ease-in-out infinite;}
+@keyframes footDotPulse{0%,100%{opacity:.5;transform:scale(.82);}50%{opacity:1;transform:scale(1.18);}}
+
+/* 更新日志（关于页） */
+#changelog{scroll-margin-top:96px;}
+.chg-item{position:relative;padding:0 0 20px 18px;border-left:1px solid rgba(255,255,255,.09);}
+.chg-item:last-child{border-left-color:transparent;padding-bottom:0;}
+.chg-item::before{content:'';position:absolute;left:-3.5px;top:6px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);}
+.chg-current::before{background:var(--orange);box-shadow:0 0 0 3px rgba(196,106,59,.16);}
+.chg-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px;}
+.chg-ver{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--cream);}
+.chg-date{font-family:var(--mono);font-size:11px;letter-spacing:.08em;opacity:.45;}
+.chg-badge{font-size:10px;letter-spacing:.1em;padding:2px 8px;border-radius:999px;background:rgba(196,106,59,.16);color:var(--orange);border:1px solid rgba(196,106,59,.3);}
+.chg-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;}
+.chg-ul li{font-size:13px;line-height:1.72;color:var(--muted);display:flex;gap:8px;align-items:flex-start;}
+.chg-tag{flex:0 0 auto;font-size:10px;letter-spacing:.06em;padding:1px 7px;border-radius:6px;margin-top:4px;background:rgba(255,255,255,.06);color:rgba(240,235,225,.6);border:1px solid rgba(255,255,255,.07);}
+.chg-flash{animation:chgFlash 1.6s ease-out;}
+@keyframes chgFlash{0%{box-shadow:0 0 0 1px rgba(196,106,59,.7),0 0 26px rgba(196,106,59,.28);}100%{box-shadow:0 0 0 1px rgba(196,106,59,0),0 0 0 rgba(196,106,59,0);}}
 
 .trash-days{position:absolute;top:8px;right:8px;z-index:2;font-size:10px;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;letter-spacing:.06em;}
 .trash-actions{position:absolute;bottom:8px;right:8px;display:flex;gap:6px;z-index:3;}
@@ -916,8 +936,13 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 
 <script>
 /* ============================================================
- * 暗房画廊 Darkroom Gallery · v1.3.0
+ * 暗房画廊 Darkroom Gallery · v1.4.0
  * 2026-11-02 更新：
+ *  - 新增：页脚版本号可点击，悬停显示构建时间；「关于」页显示版本与构建时间
+ *  - 新增：「关于」页增加更新日志，由 CHANGELOG 常量驱动，按版本倒序展示
+ *  - 新增：有新版本时页脚出现橙点，点击直达本次更新内容，看过即消失
+ *  - 规范：微调不升版本；能感知的改动升末位；成组新功能升中间位；升版本即新建同名文件
+ * 2026-11-02 v1.3.0 更新：
  *  - 新增：导出备份分「只导新增与修改 / 全部导出」，换设备时只导新照片，文件更小
  *  - 新增：导入默认「合并」——已有的照片自动跳过，不会产生重复；备份里更新过的版本才覆盖
  *  - 新增：导入后自动清理新设备自带的示例照片
@@ -957,9 +982,48 @@ const appRoot = document.querySelector('#app');
 const navEl = $('#nav');
 const lbEl = $('#lightbox');
 const editorEl = $('#editor');
-/* 版本标识：改版时同步更新这两行，页面页脚与「关于」页都会显示 */
-const APP_VERSION = '1.3.0';
+/* 版本标识：改版时同步更新以下三项，另外还要改 <head> 里的 darkroom-version / release / build 三个 meta */
+const APP_VERSION = '1.4.0';
 const APP_RELEASE = '2026-11-02';
+const APP_BUILD = '2026-11-02 22:13';
+/* 构建时间与发布同一天时，展示只保留时分，避免一行里出现两个相同的日期 */
+const APP_BUILD_SHORT = APP_BUILD.indexOf(APP_RELEASE + ' ') === 0 ? APP_BUILD.slice(APP_RELEASE.length + 1) : APP_BUILD;
+
+/* 更新日志：新版发布时在最前面插入一条。tag 用「新增 / 修复 / 优化 / 变更」 */
+const CHANGELOG = [
+  { v: '1.4.0', date: '2026-11-02', items: [
+    ['新增', '页脚版本号可点击，悬停可看到构建时间；「关于」页显示版本与构建时间'],
+    ['新增', '「关于」页增加更新日志，按版本倒序列出每次改了什么'],
+    ['新增', '有新版本时页脚版本号旁出现橙点，点一下直达本次更新内容，看过即消失'],
+    ['优化', '确立版本规则：微调不升版本，能感知的改动升末位，成组新功能升中间位'],
+  ] },
+  { v: '1.3.0', date: '2026-11-02', items: [
+    ['新增', '导出备份可选「只导新增与修改」，换设备时只导新照片，文件更小'],
+    ['新增', '导入默认「合并」：已有照片自动跳过，备份里更新的才覆盖，不再重复'],
+    ['新增', '导入成功后自动清理新设备自带的示例照片'],
+    ['修复', '导入「跳过重复」时照片的相册归属被清空'],
+    ['优化', '内置相册内容一致时不再弹「相册重复」确认框'],
+  ] },
+  { v: '1.2.2', date: '2026-11-01', items: [
+    ['新增', '首页大标题与副标题可自定义'],
+    ['新增', '时间轴自动收录全部照片，并按年、按月分组，视频带播放角标'],
+    ['新增', '灯箱功能键点击有高亮反馈；EXIF 面板点其它功能会先关闭'],
+    ['新增', '首页故事墙不再限制 4 张，改成和胶卷精选一样的横向滚动'],
+    ['新增', 'TODAY\u2019S FILM 卡片按照片比例自适应'],
+    ['修复', '上传重复照片的弹窗改为「取消上传 / 继续上传」，点遮罩不会再卡住'],
+    ['修复', '桌面端开启「减少动效」时，除 3D 粒子外的动效一秒播完不循环'],
+    ['优化', '多选状态的提示条改为堆叠，并自动避开底部工具栏'],
+  ] },
+];
+
+/* 版本角标：上次看过更新日志的版本号存在本地，与当前版本不一致时在页脚提示 */
+const SEEN_VERSION_KEY = 'darkroom.seenVersion';
+function versionSeen() {
+  try { return localStorage.getItem(SEEN_VERSION_KEY) === APP_VERSION; } catch (e) { return true; }
+}
+function markVersionSeen() {
+  try { localStorage.setItem(SEEN_VERSION_KEY, APP_VERSION); } catch (e) {}
+}
 
 function localDateStr(d) {
   const dt = d || new Date();
@@ -3623,7 +3687,7 @@ function renderHome() {
     </section>
     <footer class="footer">
       <span>DARKROOM · 暗房画廊 — 本地存储，纯粹私人</span>
-      <span><a href="#/about">关于</a> · <a href="#/upload">上传</a> · <span class="foot-ver" title="当前版本 ${APP_VERSION}（${APP_RELEASE}）">v${APP_VERSION}</span></span>
+      <span><a href="#/about">关于</a> · <a href="#/upload">上传</a> · <a class="foot-ver" href="#/about?cl=1" title="当前版本 ${APP_VERSION} · 构建 ${APP_BUILD}">v${APP_VERSION}</a>${versionSeen() ? '' : '<i class="foot-dot" title="有新的更新说明"></i>'}</span>
     </footer>
   </div>`;
 
@@ -4516,7 +4580,21 @@ async function cleanupExpiredTrash() {
 }
 
 /* 22. 关于 */
-function renderAbout() {
+function changelogHTML() {
+  return CHANGELOG.map((rel, i) => `
+    <div class="chg-item${i === 0 ? ' chg-current' : ''}">
+      <div class="chg-head">
+        <span class="chg-ver">v${esc(rel.v)}</span>
+        <span class="chg-date">${esc(rel.date)}</span>
+        ${i === 0 ? '<span class="chg-badge">当前版本</span>' : ''}
+      </div>
+      <ul class="chg-ul">
+        ${rel.items.map(([tag, text]) => `<li><span class="chg-tag">${esc(tag)}</span><span>${esc(text)}</span></li>`).join('')}
+      </ul>
+    </div>`).join('');
+}
+
+function renderAbout(params) {
   const photoCount = state.photos.filter(p => !p.deletedAt).length;
   const albumCount = nonEmptyAlbums().length;
   const favCount = state.photos.filter(p => p.favorite && !p.deletedAt).length;
@@ -4537,7 +4615,7 @@ function renderAbout() {
         <p style="margin:0 0 12px">上传「拍立得」或「胶卷」类型时，会自动归入同类型相册。如果已有同名相册，会询问是合并还是新建独立相册。</p>
         <p style="margin:0 0 12px">避免在多个浏览器标签同时编辑照片，可能导致数据不一致。</p>
         <p style="margin:0">删除的照片会先进入 <a href="#/trash" style="color:var(--orange)">回收站</a>，超过保留期后自动清理。</p>
-        <p style="margin:16px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;opacity:.62">版本 v${APP_VERSION} · ${APP_RELEASE}</p>
+        <p style="margin:16px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;opacity:.62">版本 v${APP_VERSION} · ${APP_RELEASE} · 构建 ${APP_BUILD_SHORT}</p>
       </div>
       <div class="stat-grid">
         <div class="stat-card glass" style="border-radius:16px;padding:22px;text-align:center"><div class="stat-num">${photoCount}</div><div class="stat-label">PHOTOS</div></div>
@@ -4556,9 +4634,24 @@ function renderAbout() {
           <button class="glass-btn" id="exportBtn">导出备份</button>
         </div>
       </div>
+      <div class="panel glass" id="changelog" style="margin-top:24px;border-radius:18px;padding:24px">
+        <h3 style="font-family:var(--serif);font-weight:300;margin:0 0 18px;display:flex;align-items:baseline;gap:10px">更新日志<span style="font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;opacity:.4">CHANGELOG</span></h3>
+        ${changelogHTML()}
+      </div>
       <footer class="footer"><span>DARKROOM · 暗房画廊 — 用光写作</span><span><a href="#/home">返回照片墙</a></span></footer>
     </div>`;
   $('#exportBtn').addEventListener('click', exportBackup);
+  // 看过「关于」页就算知道了本版更新，页脚橙点消失；带 ?cl=1 进来时直接滚到更新日志并闪一下
+  markVersionSeen();
+  if (params && params.get('cl')) {
+    setTimeout(() => {
+      const box = $('#changelog');
+      if (!box) return;
+      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      box.classList.add('chg-flash');
+      setTimeout(() => box.classList.remove('chg-flash'), 1800);
+    }, 120);
+  }
 }
 
 /* 23. 上传 / 管理 */

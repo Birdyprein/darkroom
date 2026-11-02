@@ -1,13 +1,10 @@
 /* 暗房画廊 · Service Worker
    策略：网络优先，成功就顺带更新缓存；断网时回退缓存。
-   HTML 必须保持「网络优先」，否则改版后用户会一直看到旧版。 */
+   - 不做 install 阶段预缓存（避免首装等待，装完即激活）
+   - HTML 始终网络优先，改版后不会看到旧版 */
 const CACHE = 'darkroom-shell-v1';
-const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
-self.addEventListener('install', e => {
-  self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL).catch(() => {})));
-});
+self.addEventListener('install', () => self.skipWaiting());
 
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
@@ -20,8 +17,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
-  const url = new URL(req.url);
-  if (url.origin !== location.origin) return;   // 字体等外链不接管
+  let url;
+  try { url = new URL(req.url); } catch (err) { return; }
+  if (url.origin !== self.location.origin) return;   // 字体等外链不接管
 
   e.respondWith((async () => {
     try {

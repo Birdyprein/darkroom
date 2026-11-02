@@ -1,0 +1,16 @@
+{
+  "name": "暗房画廊 · Darkroom Gallery",
+  "short_name": "暗房",
+  "description": "一个关于旅行、日常与胶片的私人相册",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0E0E0F",
+  "theme_color": "#161618",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

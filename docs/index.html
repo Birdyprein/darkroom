@@ -3,15 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="darkroom-version" content="1.4.1">
+<meta name="darkroom-version" content="1.4.2">
 <meta name="darkroom-release" content="2026-11-02">
-<meta name="darkroom-build" content="2026-11-02 22:40">
+<meta name="darkroom-build" content="2026-11-02 23:37">
 <title>暗房画廊 · Darkroom Gallery</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='45%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%23FFF8EC'/%3E%3Cstop offset='28%25' stop-color='%23E08A4E'/%3E%3Cstop offset='62%25' stop-color='%239E4E2A'/%3E%3Cstop offset='100%25' stop-color='%23171719'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23171719'/%3E%3Ccircle cx='32' cy='32' r='19' fill='url(%23g)'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23D08150' stroke-width='1.4' opacity='.5'/%3E%3Ccircle cx='32' cy='31.4' r='4.6' fill='%23FFFDF7' opacity='.97'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#161618">
+<!-- 添加到主屏幕：iOS 全屏独立运行（图标内联，单文件也能用） -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="暗房">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<!-- 字体不阻塞首屏：先渲染系统字体，字体到了再切换；连不上 Google 时也能立刻出内容 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Serif+SC:wght@300;400;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Serif+SC:wght@300;400;600&display=swap"></noscript>
 <style>
 :root{
   --black:#0E0E0F;--deep:#171718;--cream:#E8E2D6;--muted:#9B968C;--orange:#C46A3B;--red:#7A2E2A;
@@ -24,6 +32,11 @@
   --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   --hand:"LXGW WenKai","Kaiti SC","STKaiti",cursive;
   --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  /* 全屏 / 刘海屏安全区：普通浏览器里均为 0 */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
 }
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
@@ -48,7 +61,7 @@ body::after{content:"";position:fixed;inset:0;z-index:3;pointer-events:none;opac
 .glass-btn:hover{background:rgba(255,255,255,.17);transform:translateY(-1px);}
 .glass-btn:active{transform:scale(0.95) !important;transition:transform 0.1s var(--fluid-damp);}
 
-.nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);width:min(1280px,calc(100% - 32px));height:60px;z-index:60;display:flex;align-items:center;gap:20px;padding:0 20px;border-radius:18px;
+.nav{position:fixed;top:calc(16px + var(--sat));left:50%;transform:translateX(-50%);width:min(1280px,calc(100% - 32px));height:60px;z-index:60;display:flex;align-items:center;gap:20px;padding:0 20px;border-radius:18px;
   background: linear-gradient(135deg, rgba(22,22,24,.62) 0%, rgba(22,22,24,.42) 100%);
   border: 1px solid var(--glass-border);
   box-shadow: 0 8px 30px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.12);
@@ -99,7 +112,7 @@ body::after{content:"";position:fixed;inset:0;z-index:3;pointer-events:none;opac
 .sp-footer .sp-more{font-size:12px;color:var(--orange);cursor:pointer;background:none;border:none;padding:0;}
 .sp-footer .sp-more:hover{text-decoration:underline;}
 
-#app{position:relative;z-index:2;padding-top:104px;min-height:100vh;}
+#app{position:relative;z-index:2;padding-top:calc(104px + var(--sat));min-height:100vh;}
 .boot-loading{min-height:calc(100vh - 104px);display:flex;align-items:center;justify-content:center;}
 .boot-hint{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:rgba(155,150,140,.6);text-transform:uppercase;}
 .boot-dot{display:inline-block;animation:bootDot 1.4s ease-in-out infinite;}
@@ -440,7 +453,7 @@ select.input option{background:#1a1a1b;color:var(--cream);}
 .btn-danger{background:rgba(217,112,94,.9);color:#fff;}
 .btn-danger:hover{background:#e07d6b;}
 
-.select-bar{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);z-index:120;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+.select-bar{position:fixed;left:50%;bottom:calc(24px + var(--sab));transform:translateX(-50%) translateY(30px);z-index:120;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
   background: linear-gradient(135deg, rgba(22,22,24,.62) 0%, rgba(22,22,24,.42) 100%);
   border: 1px solid var(--glass-border);
   backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);
@@ -460,7 +473,7 @@ select.input option{background:#1a1a1b;color:var(--cream);}
 .select-bar.batch-processing button{opacity:.4;pointer-events:none;}
 .select-bar.batch-processing .select-count::after{content:" · 处理中…";color:var(--muted);font-size:10px;}
 
-.trash-select-bar{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);z-index:120;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+.trash-select-bar{position:fixed;left:50%;bottom:calc(24px + var(--sab));transform:translateX(-50%) translateY(30px);z-index:120;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
   background: linear-gradient(135deg, rgba(22,22,24,.62) 0%, rgba(22,22,24,.42) 100%);
   border: 1px solid var(--glass-border);
   backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);
@@ -485,7 +498,7 @@ body.trash-select-mode .trash-days{top:8px;right:8px;left:auto;}
 .photo-card.trash-selected .trash-select-dot::after{content:"✓";color:#fff;font-size:12px;}
 .photo-card.trash-selected{outline:2px solid var(--orange);outline-offset:-2px;}
 
-.album-select-bar{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);z-index:120;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+.album-select-bar{position:fixed;left:50%;bottom:calc(24px + var(--sab));transform:translateX(-50%) translateY(30px);z-index:120;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
   background: linear-gradient(135deg, rgba(22,22,24,.62) 0%, rgba(22,22,24,.42) 100%);
   border: 1px solid var(--glass-border);
   backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);
@@ -517,7 +530,7 @@ body.trash-select-mode .trash-days{top:8px;right:8px;left:auto;}
 .upload-progress .up-bar i{display:block;height:100%;width:0;background:var(--orange);transition:width .3s var(--ease);}
 .upload-progress .up-pct{font-family:var(--mono);font-size:11px;color:var(--muted);flex:0 0 auto;}
 
-.scroll-fabs{position:fixed;right:20px;bottom:30px;z-index:80;display:flex;flex-direction:column;gap:8px;opacity:0;pointer-events:none;transform:translateY(10px);transition:all .35s var(--fluid-spring);}
+.scroll-fabs{position:fixed;right:calc(20px + var(--sar));bottom:calc(30px + var(--sab));z-index:80;display:flex;flex-direction:column;gap:8px;opacity:0;pointer-events:none;transform:translateY(10px);transition:all .35s var(--fluid-spring);}
 .scroll-fabs.visible{opacity:1;pointer-events:auto;transform:none;}
 body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 .scroll-fabs button{min-width:56px;height:38px;padding:0 14px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;letter-spacing:.08em;color:var(--cream);
@@ -707,8 +720,8 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
   .brand{font-size:15px;letter-spacing:.16em;}
   .nav-right .text-btn:not(.menu-toggle){display:none;}
   .nav-right .glass-btn{display:none;}
-  .hero{min-height:54vh;}
-  .today-film{position:static;transform:none;margin-top:36px;width:var(--tf-w,132px);max-width:150px;align-self:flex-end;}
+  .hero{min-height:42vh;padding:18px 0 30px;}
+  .today-film{position:static;transform:none;margin-top:20px;width:var(--tf-w,124px);max-width:142px;align-self:flex-end;}
   .upload-layout{grid-template-columns:1fr;}
   .lb-tools{display:none;}
   .lb-top{margin:10px 10px 0;padding:6px 8px;}
@@ -946,8 +959,17 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 
 <script>
 /* ============================================================
- * 暗房画廊 Darkroom Gallery · v1.4.1
- * 2026-11-02 修复：
+ * 暗房画廊 Darkroom Gallery · v1.4.2
+ * 2026-11-02 更新：
+ *  - 新增：上传时额外生成 640px 缩略图（约 40–70KB），卡片/时间轴/相册封面/搜索都用它，灯箱仍读原图
+ *  - 新增：「上传 / 管理」页「补缩略图 · N」按钮，为历史照片批量补生成，省空间、滚动更顺
+ *  - 变更：备份改为 ZIP 打包（store-only，manifest.json + photos/ + thumbs/ …），体积不再 base64 膨胀 37%
+ *  - 变更：导入同时支持新 ZIP 与旧 JSON，旧备份仍可正常还原
+ *  - 新增：可添加到主屏幕（apple-touch-icon 内联 + 运行时注入 manifest / service worker，file:// 打开时不注入）
+ *  - 优化：刘海屏 / 全屏模式加安全区避让（导航、底部栏、浮动按钮）
+ *  - 优化：手机端首屏收紧（hero 64→42vh），一进来就能看到作品
+ *  - 优化：Google Fonts 改为非阻塞加载，弱网或连不上时首屏不再白屏等待
+ * 2026-11-02 v1.4.1 修复：
  *  - 修复：故事墙忽略「管理」勾选、把拍立得全部显示；胶卷精选全部取消后仍自动凑一张
  *  - 新增：两个板块无内容时显示「＋ 添加照片」，点击直达管理弹窗
  *  - 修复：时间轴多选时选中照片无可见高亮（img 的 filter 让父级 outline 不可见），改用覆盖层 + 勾选角标
@@ -998,14 +1020,22 @@ const navEl = $('#nav');
 const lbEl = $('#lightbox');
 const editorEl = $('#editor');
 /* 版本标识：改版时同步更新以下三项，另外还要改 <head> 里的 darkroom-version / release / build 三个 meta */
-const APP_VERSION = '1.4.1';
+const APP_VERSION = '1.4.2';
 const APP_RELEASE = '2026-11-02';
-const APP_BUILD = '2026-11-02 22:40';
+const APP_BUILD = '2026-11-02 23:37';
 /* 构建时间与发布同一天时，展示只保留时分，避免一行里出现两个相同的日期 */
 const APP_BUILD_SHORT = APP_BUILD.indexOf(APP_RELEASE + ' ') === 0 ? APP_BUILD.slice(APP_RELEASE.length + 1) : APP_BUILD;
 
 /* 更新日志：新版发布时在最前面插入一条。tag 用「新增 / 修复 / 优化 / 变更」 */
 const CHANGELOG = [
+  { v: '1.4.2', date: '2026-11-02', items: [
+    ['新增', '照片墙改用小缩略图：滚动更顺、占用空间更省；灯箱里看的仍是原图'],
+    ['新增', '「管理」页可一键为老照片补生成缩略图，省下大量存储空间'],
+    ['优化', '备份改为 ZIP 打包，体积不再虚胖 37%，大图库导出更稳'],
+    ['新增', '支持「添加到主屏幕」，手机上像 App 一样全屏打开，断网也能看已缓存的部分'],
+    ['优化', '手机端首屏收紧，一进来就能看到作品'],
+    ['优化', '字体改为不阻塞首屏，弱网下打开更快'],
+  ] },
   { v: '1.4.1', date: '2026-11-02', items: [
     ['修复', '故事墙不理会「管理」里的勾选，把拍立得全显示出来；现在只显示勾选过的照片'],
     ['修复', '胶卷精选全部取消勾选后仍会自动凑一张；现在留空并提示添加照片'],
@@ -1251,7 +1281,13 @@ const PLACEHOLDER_VIDEO = 'data:image/svg+xml;utf8,' + encodeURIComponent(
 function photoSrc(p) { if (p.blob) { if (!urlCache.has(p.id)) urlCache.set(p.id, URL.createObjectURL(p.blob)); return urlCache.get(p.id); } return p.src || ''; }
 function videoSrc(p) { if (p.videoBlob) { const k = 'v_' + p.id; if (!urlCache.has(k)) urlCache.set(k, URL.createObjectURL(p.videoBlob)); return urlCache.get(k); } return p.videoSrc || ''; }
 function coverSrc(p) { if (p.kind === 'live') { if (p.coverBlob) { const k = 'c_' + p.id; if (!urlCache.has(k)) urlCache.set(k, URL.createObjectURL(p.coverBlob)); return urlCache.get(k); } return PLACEHOLDER_VIDEO; } return photoSrc(p); }
-function revokePhotoURL(id) { ['', 'v_', 'c_'].forEach(pre => { const k = pre + id; const u = urlCache.get(k); if (u) { URL.revokeObjectURL(u); urlCache.delete(k); } }); }
+/* 网格缩略图：优先用上传时生成的小图（约 40KB），没有就回退到原图。
+   灯箱与编辑器必须用 coverSrc / photoSrc，那里要的是原图。 */
+function thumbSrc(p) {
+  if (p.thumbBlob) { const k = 't_' + p.id; if (!urlCache.has(k)) urlCache.set(k, URL.createObjectURL(p.thumbBlob)); return urlCache.get(k); }
+  return coverSrc(p);
+}
+function revokePhotoURL(id) { ['', 'v_', 'c_', 't_'].forEach(pre => { const k = pre + id; const u = urlCache.get(k); if (u) { URL.revokeObjectURL(u); urlCache.delete(k); } }); }
 
 let unlockedAlbums;
 try { const raw = sessionStorage.getItem('dr-unlocked'); const parsed = raw ? JSON.parse(raw) : []; unlockedAlbums = new Set(Array.isArray(parsed) ? parsed.filter(x => typeof x === 'string') : []); }
@@ -1634,7 +1670,7 @@ function renderSearchPopResults(q) {
   const thumbsHtml = `<div class="sp-result-label">${label}</div>
     <div class="sp-results">${thumbs.map(p => `
       <div class="sp-thumb" data-id="${esc(p.id)}" title="${esc(p.title)}">
-        ${p.kind === 'live' ? `<img src="${esc(coverSrc(p))}" alt=""><span class="sp-thumb-vid">▶</span>` : `<img src="${esc(coverSrc(p))}" alt="">`}
+        ${p.kind === 'live' ? `<img src="${esc(thumbSrc(p))}" alt=""><span class="sp-thumb-vid">▶</span>` : `<img src="${esc(thumbSrc(p))}" alt="">`}
       </div>`).join('')}</div>
     <div class="sp-footer"><span class="sp-hint">${hint}</span><button class="sp-more" data-sp-more>在搜索页查看 →</button></div>`;
   body.hidden = false;
@@ -1757,7 +1793,7 @@ function makeCard(p, i, opts = {}) {
   card.className = 'photo-card' + (p.kind === 'polaroid' ? ' is-polaroid' : '') + (isFilm ? ' is-film' : '');
   card.dataset.id = p.id; card.dataset.kind = p.kind || 'photo'; card.dataset.ratio = p.ratio || 1.3;
   card.style.setProperty('--i', i);
-  const src = isVideo ? coverSrc(p) : photoSrc(p);
+  const src = isVideo ? coverSrc(p) : thumbSrc(p);
   const filmHoles = isFilm ? `<div class="film-holes-top"></div><div class="film-holes-bottom"></div><span class="film-number">${pad2(i+1)}</span>` : '';
   card.innerHTML = `
     <div class="card-media"><img src="${esc(src)}" alt="${esc(p.title)}" loading="lazy" draggable="false"></div>
@@ -3569,7 +3605,7 @@ function openHomeFeaturePicker(flag) {
         const autoFromAlbum = flag === 'filmstrip' && albumsOf(p).some(a => flagSet.has(a.id));
         const isChosen = chosen.has(p.id);
         return `<div data-hmid="${esc(p.id)}" style="position:relative;aspect-ratio:1;border-radius:6px;overflow:hidden;cursor:pointer;${isChosen?'outline:2px solid var(--orange);outline-offset:-2px;':''}">
-            <img src="${esc(coverSrc(p))}" alt="" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.style.opacity='0.3'">
+            <img src="${esc(thumbSrc(p))}" alt="" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.style.opacity='0.3'">
             ${isChosen ? '<span class="hm-check" style="position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;display:grid;place-items:center">✓</span>' : ''}
             ${autoFromAlbum && !isChosen ? '<span style="position:absolute;bottom:4px;left:4px;font-size:9px;padding:2px 5px;border-radius:4px;background:rgba(196,106,59,.85);color:#fff;letter-spacing:.06em">相册</span>' : ''}
           </div>`;
@@ -3704,7 +3740,7 @@ function renderHome() {
       <h1>${heroTitleHtml}</h1>
       <p class="hero-sub">${heroSubHtml}</p>
       <div class="scroll-hint">SCROLL TO DEVELOP</div>
-      ${today ? `<div class="today-film" data-id="${today.id}" style="${todayFilmStyle(today)}"><span class="tf-label">TODAY'S FILM</span><img src="${esc(coverSrc(today))}" alt=""><span class="tf-title">${esc(today.title)}</span></div>` : ''}
+      ${today ? `<div class="today-film" data-id="${today.id}" style="${todayFilmStyle(today)}"><span class="tf-label">TODAY'S FILM</span><img src="${esc(thumbSrc(today))}" alt=""><span class="tf-title">${esc(today.title)}</span></div>` : ''}
     </section>
     <div class="filter-bar" id="filterBar">
       <div class="filter-chips" id="filterChips">${chipsHtml}</div>
@@ -3914,7 +3950,7 @@ function filmstripHTML(photos) {
     <button class="film-arrow film-arrow-left" data-dir="-1" aria-label="左移">‹</button>
     <div class="film-track">
       ${photos.map((p, i) => `<div class="frame" data-id="${esc(p.id)}">
-          <img src="${esc(coverSrc(p))}" alt="${esc(p.title)}" loading="lazy" draggable="false">
+          <img src="${esc(thumbSrc(p))}" alt="${esc(p.title)}" loading="lazy" draggable="false">
           ${p.kind === 'live' ? `<span class="frame-live" aria-label="视频"><svg viewBox="0 0 8 10" width="7" height="9" aria-hidden="true"><path d="M0 0l8 5-8 5z" fill="currentColor"/></svg></span>` : ''}
           <span class="frame-no">${pad2(i + 1)}</span>
         </div>`).join('')}
@@ -3925,7 +3961,7 @@ function filmstripHTML(photos) {
 function polaroidCardHTML(p, i) {
   const rot = (((hashStr(p.id) % 50) / 10) - 2.5).toFixed(1);
   return `<div class="polaroid-card" data-id="${esc(p.id)}" style="--i:${i};--rot:${rot}deg">
-      <div class="pc-media"><img src="${esc(coverSrc(p))}" alt="${esc(p.title)}" loading="lazy" draggable="false" onerror="this.classList.add('img-error')"></div>
+      <div class="pc-media"><img src="${esc(thumbSrc(p))}" alt="${esc(p.title)}" loading="lazy" draggable="false" onerror="this.classList.add('img-error')"></div>
       <div class="pc-title">${esc(p.title)}</div>
       <div class="pc-date">${esc(p.date || '')}</div>
     </div>`;
@@ -4106,7 +4142,7 @@ function albumCardHTML(a) {
   const selected = albumSelected.has(a.id);
   return `<div class="album-card ${selected ? 'album-selected' : ''}" data-album="${esc(a.id)}">
     <div class="album-cover ${locked ? 'locked' : ''}">
-      ${cover ? `<img src="${esc(coverSrc(cover))}" alt="" loading="lazy">` : `<div style="width:100%;height:100%;background:#1a1a1b"></div>`}
+      ${cover ? `<img src="${esc(thumbSrc(cover))}" alt="" loading="lazy">` : `<div style="width:100%;height:100%;background:#1a1a1b"></div>`}
       ${locked ? '<div class="album-lock">🔒</div>' : ''}
     </div>
     <button class="album-select-dot" aria-hidden="true"></button>
@@ -4558,7 +4594,7 @@ async function renderTrash() {
       c.style.setProperty('--i', i);
       const daysLeft = Math.max(0, Math.ceil((p.deletedAt + retention * 86400000 - Date.now()) / 86400000));
       c.innerHTML = `
-        <div class="card-media"><img src="${esc(coverSrc(p))}" alt="${esc(p.title)}" loading="lazy"></div>
+        <div class="card-media"><img src="${esc(thumbSrc(p))}" alt="${esc(p.title)}" loading="lazy"></div>
         <span class="trash-days">${daysLeft} 天后删除</span>
         <div class="trash-select-dot"></div>
         <div class="trash-actions">
@@ -4883,11 +4919,12 @@ function renderUpload() {
         <p class="page-desc">照片压缩后存入本地 IndexedDB · 换设备用「导出 / 导入备份」搬过去</p>
       </div>
       <div class="head-actions">
-        <button class="glass-btn" id="exportBtn2">导出备份 JSON</button>
-        <button class="glass-btn" id="importBtn">导入备份 JSON</button>
+        <button class="glass-btn" id="exportBtn2">导出备份</button>
+        <button class="glass-btn" id="importBtn">导入备份包</button>
+        <button class="glass-btn" id="thumbFixBtn" style="display:none">补缩略图</button>
         <button class="glass-btn" id="manageScenesBtn">管理场景</button>
         <button class="glass-btn" id="clearBtn" style="color:#D9705E">删除全部数据</button>
-        <input type="file" id="importFile" accept="application/json" hidden>
+        <input type="file" id="importFile" accept=".zip,.json,application/json,application/zip" hidden>
       </div>
       <div class="upload-layout">
         <section class="panel glass" style="border-radius:18px;padding:24px">
@@ -5019,9 +5056,9 @@ function renderUpload() {
           });
           ok++;
         } else {
-          const [{ blob, w, h }, exifData] = await Promise.all([compressImage(f), readExifSafe(f)]);
+          const [{ blob, w, h, thumb }, exifData] = await Promise.all([compressImage(f), readExifSafe(f)]);
           const item = {
-            kind: 'photo', blob, w, h, name: f.name.replace(/\.[^.]+$/, ''),
+            kind: 'photo', blob, thumbBlob: thumb || null, w, h, name: f.name.replace(/\.[^.]+$/, ''),
             previewUrl: URL.createObjectURL(blob), ratio: h / w,
             analysisReady: false, sceneCandidates: [], descCandidates: [], colorTags: [],
             chosenScene: null, chosenDescs: [], source: 'basic', exif: exifData, aiFailed: false,
@@ -5256,6 +5293,7 @@ function renderUpload() {
           createdAt: Date.now(), updatedAt: Date.now(), ratio: u.ratio || 1.3, privacy: 'public', sortWeight: Date.now(),
           scene, deletedAt: null, restoredAt: null, originalBlob: null,
           blob: u.kind === 'photo' ? u.blob : null,
+          thumbBlob: u.kind === 'photo' ? (u.thumbBlob || null) : null,
           videoBlob: u.kind === 'live' ? u.videoBlob : null,
           coverBlob: u.kind === 'live' ? u.coverBlob : null,
           exif: u.kind === 'photo' ? (u.exif || null) : null,
@@ -5333,7 +5371,7 @@ function renderUpload() {
     const kindLabel = p => p.kind === 'polaroid' ? '拍立得' : p.kind === 'film' ? '胶卷' : p.kind === 'live' ? '视频' : '普通照片';
     box.innerHTML = list.map(p => `
       <div class="manage-row" data-id="${esc(p.id)}">
-        <div class="mr-thumb"><img src="${esc(coverSrc(p))}" alt="" loading="lazy" onerror="this.style.opacity='0.3'"></div>
+        <div class="mr-thumb"><img src="${esc(thumbSrc(p))}" alt="" loading="lazy" onerror="this.style.opacity='0.3'"></div>
         <div class="mr-info">
           <div class="mr-title">${esc(p.title || '未命名')} ${p.favorite ? '<span style="color:var(--orange)">♥</span>' : ''}</div>
           <div class="mr-sub">${esc(p.date || '—')} · ${esc(p.place || '—')} · ${esc(albumOf(p)?.name || '未归类')} · ${kindLabel(p)}</div>
@@ -5379,10 +5417,12 @@ function renderUpload() {
 
   $('#manageScenesBtn').addEventListener('click', openSceneManager);
   $('#exportBtn2').addEventListener('click', exportBackup);
+  $('#thumbFixBtn').addEventListener('click', backfillThumbs);
+  updateThumbFixBtn();
   $('#importBtn').addEventListener('click', () => $('#importFile').click());
   $('#importFile').addEventListener('change', async e => {
     const f = e.target.files[0]; if (!f) return;
-    try { await importBackup(f); renderManage(); }
+    try { await importBackup(f); renderManage(); updateThumbFixBtn(); }
     catch (err) { toast('导入失败：文件格式不正确'); }
     e.target.value = '';
   });
@@ -5422,6 +5462,89 @@ async function extractVideoCover(file) {
     v.src = URL.createObjectURL(file);
   });
 }
+/* 缩略图长边：卡片最宽约 320px，二倍屏取 640 足够；约 40–70KB/张 */
+const THUMB_SIDE = 640;
+function makeThumbFromImage(img, keepAlpha) {
+  return new Promise(resolve => {
+    try {
+      const ow = img.naturalWidth || img.width, oh = img.naturalHeight || img.height;
+      if (!ow || !oh) return resolve(null);
+      const s = Math.min(1, THUMB_SIDE / Math.max(ow, oh));
+      const w = Math.max(1, Math.round(ow * s)), h = Math.max(1, Math.round(oh * s));
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const x = c.getContext('2d');
+      if (!keepAlpha) { x.fillStyle = '#ffffff'; x.fillRect(0, 0, w, h); }
+      x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+      x.drawImage(img, 0, 0, w, h);
+      const types = keepAlpha ? ['image/webp', 'image/png'] : ['image/webp', 'image/jpeg'];
+      const step = i => {
+        if (i >= types.length) return resolve(null);
+        c.toBlob(b => { if (b) resolve(b); else step(i + 1); }, types[i], 0.8);
+      };
+      step(0);
+    } catch (e) { resolve(null); }
+  });
+}
+/* 从已存的原图 blob 重新生成缩略图（恢复原图、给老照片补生成时用） */
+function thumbFromBlob(blob) {
+  return new Promise(resolve => {
+    if (!blob) return resolve(null);
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = async () => { URL.revokeObjectURL(url); resolve(await makeThumbFromImage(img, true)); };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+/* 老照片补缩略图：只在「上传 / 管理」页需要时显示入口 */
+function needThumbCount() {
+  return state.photos.filter(p => p.kind !== 'live' && p.blob && !p.thumbBlob).length;
+}
+function updateThumbFixBtn() {
+  const b = $('#thumbFixBtn'); if (!b) return;
+  const n = needThumbCount();
+  b.style.display = n ? '' : 'none';
+  b.textContent = n ? `补缩略图 · ${n}` : '补缩略图';
+}
+async function backfillThumbs() {
+  const targets = state.photos.filter(p => p.kind !== 'live' && p.blob && !p.thumbBlob);
+  if (!targets.length) { updateThumbFixBtn(); return toast('所有照片都已有缩略图'); }
+  const ok = await new Promise(resolve => {
+    const { close, root } = makeModal(`
+      <h3>生成缩略图</h3>
+      <p style="color:var(--muted);font-size:13px;line-height:1.9;margin:0 0 12px">会为 <strong style="color:var(--cream)">${targets.length} 张</strong>还没有缩略图的照片各生成一张小图（长边 ${THUMB_SIDE}px）。</p>
+      <p style="color:var(--muted);font-size:12px;line-height:1.8;margin:0 0 12px">好处：图库滚动更顺，相册页打开更快。处理期间页面会稍微卡一点，请保持页面打开。</p>
+      <div class="modal-actions"><button class="btn-ghost" data-act="cancel">取消</button><button class="btn-primary" data-act="ok">开始生成</button></div>`);
+    if (!root) { resolve(false); return; }
+    root.addEventListener('click', e => {
+      const act = e.target.closest('[data-act]')?.dataset.act;
+      if (act === 'cancel') { close(); resolve(false); }
+      if (act === 'ok') { close(); resolve(true); }
+    });
+  });
+  if (!ok) return;
+  showUploadProgress(`正在生成缩略图 0/${targets.length}…`);
+  let done = 0, skipped = 0;
+  for (const p of targets) {
+    try {
+      const t = await thumbFromBlob(p.blob);
+      if (t && t.size < (p.blob.size || Infinity)) { p.thumbBlob = t; p.updatedAt = Date.now(); await idbPut('photos', p); }
+      else skipped++;
+    } catch (e) { skipped++; }
+    done++;
+    setUploadProgress(done / targets.length * 100);
+    if (done % 5 === 0) { const lab = $('.up-label'); if (lab) lab.textContent = `正在生成缩略图 ${done}/${targets.length}…`; }
+  }
+  hideUploadProgress();
+  revokeAllThumbs();
+  updateThumbFixBtn();
+  refreshCurrentView();
+  toast(skipped ? `已生成 ${done - skipped} 张，${skipped} 张跳过` : `已为 ${done} 张照片生成缩略图`);
+}
+function revokeAllThumbs() {
+  const keys = [...urlCache.keys()].filter(k => String(k).startsWith('t_'));
+  keys.forEach(k => { try { URL.revokeObjectURL(urlCache.get(k)); } catch (e) {} urlCache.delete(k); });
+}
 async function compressImage(file, maxSide = 1920) {
   // HEIC/HEIF（iPhone 默认拍照格式）在多数浏览器中无法直接解码，提前给出明确提示
   if (/\.(heic|heif)$/i.test(file.name)) {
@@ -5433,10 +5556,10 @@ async function compressImage(file, maxSide = 1920) {
     img.onload = () => {
       try {
         URL.revokeObjectURL(url);
-        let w = img.naturalWidth || img.width; let h = img.naturalHeight || img.height;
-        if (!w || !h) return reject(new Error('图片尺寸无效'));
-        const scale = Math.min(1, maxSide / Math.max(w, h));
-        w = Math.round(w * scale); h = Math.round(h * scale);
+        const ow = img.naturalWidth || img.width, oh = img.naturalHeight || img.height;
+        if (!ow || !oh) return reject(new Error('图片尺寸无效'));
+        const scale = Math.min(1, maxSide / Math.max(ow, oh));
+        const w = Math.round(ow * scale), h = Math.round(oh * scale);
         const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
         const ctx = canvas.getContext('2d');
         // PNG/WebP 保留透明通道；JPEG 不支持透明，先铺白底避免透明区变黑
@@ -5448,9 +5571,11 @@ async function compressImage(file, maxSide = 1920) {
         ctx.drawImage(img, 0, 0, w, h);
         const outType = keepAlpha ? (file.type === 'image/webp' ? 'image/webp' : 'image/png') : 'image/jpeg';
         const quality = keepAlpha ? 0.92 : 0.86;
-        canvas.toBlob(blob => {
-          if (blob) resolve({ blob, w, h });
-          else reject(new Error('压缩失败'));
+        canvas.toBlob(async blob => {
+          if (!blob) return reject(new Error('压缩失败'));
+          // 复用这张已解码的图再画一次缩略图，不重新解码文件
+          const thumb = await makeThumbFromImage(img, keepAlpha);
+          resolve({ blob, w, h, thumb });
         }, outType, quality);
       } catch (err) { reject(err); }
     };
@@ -5730,16 +5855,17 @@ $('#edFilterRow').addEventListener('click', e => {
 $('#edRestore').addEventListener('click', async () => {
   if (!RT.photo || !RT.photo.originalBlob) return;
   const targetId = RT.photo.id;
-  const oldBlob = RT.photo.blob; const oldOriginalBlob = RT.photo.originalBlob;
+  const oldBlob = RT.photo.blob; const oldOriginalBlob = RT.photo.originalBlob; const oldThumb = RT.photo.thumbBlob;
   try {
     RT.photo.blob = RT.photo.originalBlob; RT.photo.originalBlob = null; RT.photo.updatedAt = Date.now();
+    RT.photo.thumbBlob = await thumbFromBlob(RT.photo.blob);
     await idbPut('photos', RT.photo);
     revokePhotoURL(targetId);
     const fresh = await idbGet('photos', targetId);
     if (fresh) { const idx = state.photos.findIndex(x => x.id === targetId); if (idx >= 0) state.photos[idx] = fresh; }
     toast('已恢复原图'); closeEditor(); refreshCurrentView();
     if (lbEl.classList.contains('open')) { resetZoom(false); renderLightbox(false); }
-  } catch (err) { RT.photo.blob = oldBlob; RT.photo.originalBlob = oldOriginalBlob; RT.photo.updatedAt = Date.now(); toast('恢复失败：' + (err.message || '未知错误')); }
+  } catch (err) { RT.photo.blob = oldBlob; RT.photo.originalBlob = oldOriginalBlob; RT.photo.thumbBlob = oldThumb; RT.photo.updatedAt = Date.now(); toast('恢复失败：' + (err.message || '未知错误')); }
 });
 $('#edSave').addEventListener('click', () => {
   const p = RT.photo; if (!p) return;
@@ -5779,7 +5905,9 @@ $('#edSave').addEventListener('click', () => {
             const oldBlob = p.blob; const oldOriginalBlob = p.originalBlob;
             try {
               const wasInTrash = !!p.deletedAt;
+              const oldThumbBlob = p.thumbBlob;
               p.blob = blob;
+              p.thumbBlob = await makeThumbFromImage(canvas, false);
               if (!p.originalBlob) p.originalBlob = oldBlob;
               p.ratio = ratio;
               if (wasInTrash) { p.deletedAt = null; p.restoredAt = null; }
@@ -5792,7 +5920,7 @@ $('#edSave').addEventListener('click', () => {
               closeEditor(); refreshCurrentView();
               if (lbEl.classList.contains('open')) { resetZoom(false); renderLightbox(false); }
             } catch (err) {
-              p.blob = oldBlob; p.originalBlob = oldOriginalBlob; p.updatedAt = now;
+              p.blob = oldBlob; p.originalBlob = oldOriginalBlob; p.thumbBlob = oldThumbBlob; p.updatedAt = now;
               toast('保存失败：' + (err.message || '未知错误'));
             }
             return;
@@ -5804,6 +5932,7 @@ $('#edSave').addEventListener('click', () => {
             id: uid(),
             title: p.title ? `${p.title} · 修图` : '修图照片',
             blob,
+            thumbBlob: await makeThumbFromImage(canvas, false),
             ratio,
             date: localDateStr(new Date(now)),
             createdAt: now, updatedAt: now, sortWeight: now,
@@ -5836,9 +5965,108 @@ async function loadExportState() {
 async function saveExportState() {
   try { await idbPut('settings', { key: 'exportState', value: exportState }); } catch (e) {}
 }
+/* ---- ZIP 打包（store-only，不压缩：照片本身已压缩，再压只会白烧 CPU）----
+   目的：备份把图片按原始二进制存进 zip，体积 1:1；
+   旧方案 base64 进 JSON 会虚胖 37%，且内存峰值要高 3 倍。 */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) { let c = i; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[i] = c >>> 0; }
+  return t;
+})();
+function crc32(bytes) {
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+const ZIP_UTF8_FLAG = 0x0800;
+async function buildZip(entries) {
+  const enc = new TextEncoder();
+  const d = new Date();
+  const dosTime = ((d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1)) & 0xFFFF;
+  const dosDate = (((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 0xFFFF;
+  const chunks = []; const central = []; let offset = 0;
+  for (const e of entries) {
+    const nameBytes = enc.encode(e.name);
+    // 空目录条目（name 以 / 结尾且无数据）
+    const buf = e.blob ? new Uint8Array(await e.blob.arrayBuffer()) : new Uint8Array(0);
+    const crc = crc32(buf);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, ZIP_UTF8_FLAG, true);
+    lh.setUint16(8, 0, true); lh.setUint16(10, dosTime, true); lh.setUint16(12, dosDate, true);
+    lh.setUint32(14, crc, true); lh.setUint32(18, buf.length, true); lh.setUint32(22, buf.length, true);
+    lh.setUint16(26, nameBytes.length, true); lh.setUint16(28, 0, true);
+    chunks.push(new Uint8Array(lh.buffer), nameBytes, buf);
+    central.push({ nameBytes, crc, size: buf.length, offset });
+    offset += 30 + nameBytes.length + buf.length;
+  }
+  const cdStart = offset;
+  for (const c of central) {
+    const cd = new DataView(new ArrayBuffer(46));
+    cd.setUint32(0, 0x02014b50, true); cd.setUint16(4, 20, true); cd.setUint16(6, 20, true);
+    cd.setUint16(8, ZIP_UTF8_FLAG, true); cd.setUint16(10, 0, true);
+    cd.setUint16(12, dosTime, true); cd.setUint16(14, dosDate, true);
+    cd.setUint32(16, c.crc, true); cd.setUint32(20, c.size, true); cd.setUint32(24, c.size, true);
+    cd.setUint16(28, c.nameBytes.length, true);
+    cd.setUint32(42, c.offset, true);
+    chunks.push(new Uint8Array(cd.buffer), c.nameBytes);
+    offset += 46 + c.nameBytes.length;
+  }
+  const eo = new DataView(new ArrayBuffer(22));
+  eo.setUint32(0, 0x06054b50, true);
+  eo.setUint16(8, central.length, true); eo.setUint16(10, central.length, true);
+  eo.setUint32(12, offset - cdStart, true); eo.setUint32(16, cdStart, true);
+  chunks.push(new Uint8Array(eo.buffer));
+  return new Blob(chunks, { type: 'application/zip' });
+}
+/* 解 zip：支持 store(0) 与 deflate(8)，后者用浏览器内置 DecompressionStream */
+async function readZip(file) {
+  const buf = new Uint8Array(await file.arrayBuffer());
+  const dv = new DataView(buf.buffer);
+  const findEOCD = () => {
+    for (let i = buf.length - 22; i >= Math.max(0, buf.length - 66000); i--) if (dv.getUint32(i, true) === 0x06054b50) return i;
+    return -1;
+  };
+  const eo = findEOCD();
+  if (eo < 0) throw new Error('不是有效的 ZIP 文件');
+  const count = dv.getUint16(eo + 10, true);
+  let p = dv.getUint32(eo + 16, true);
+  const dec = new TextDecoder();
+  const out = {};
+  for (let i = 0; i < count; i++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const method = dv.getUint16(p + 10, true);
+    const csize = dv.getUint32(p + 20, true);
+    const nameLen = dv.getUint16(p + 28, true);
+    const extraLen = dv.getUint16(p + 30, true);
+    const cmtLen = dv.getUint16(p + 32, true);
+    const lho = dv.getUint32(p + 42, true);
+    const name = dec.decode(buf.subarray(p + 46, p + 46 + nameLen));
+    const lNameLen = dv.getUint16(lho + 26, true);
+    const lExtraLen = dv.getUint16(lho + 28, true);
+    const dataStart = lho + 30 + lNameLen + lExtraLen;
+    const raw = buf.subarray(dataStart, dataStart + csize);
+    p += 46 + nameLen + extraLen + cmtLen;
+    if (name.endsWith('/')) continue;
+    if (method === 0) out[name] = new Blob([raw]);
+    else if (method === 8) {
+      const ds = new DecompressionStream('deflate-raw');
+      const ab = await new Response(new Blob([raw]).stream().pipeThrough(ds)).arrayBuffer();
+      out[name] = new Blob([ab]);
+    }
+  }
+  return out;
+}
+function zipExt(blob, fallback) {
+  const t = (blob && blob.type) || '';
+  if (t.indexOf('png') >= 0) return 'png';
+  if (t.indexOf('webp') >= 0) return 'webp';
+  if (t.indexOf('mp4') >= 0 || t.indexOf('video') >= 0) return 'mp4';
+  if (t.indexOf('jpeg') >= 0 || t.indexOf('jpg') >= 0) return 'jpg';
+  return fallback;
+}
 function photoBytesOf(list) {
   let n = 0;
-  for (const p of list) n += (p.blob?.size || 0) + (p.videoBlob?.size || 0) + (p.coverBlob?.size || 0) + (p.originalBlob?.size || 0);
+  for (const p of list) n += (p.blob?.size || 0) + (p.thumbBlob?.size || 0) + (p.videoBlob?.size || 0) + (p.coverBlob?.size || 0) + (p.originalBlob?.size || 0);
   return n;
 }
 const mbText = n => n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
@@ -5848,14 +6076,14 @@ async function exportBackup() {
   if (!exportable.length) return toast(state.photos.length ? '只有示例照片，没有你自己的照片可导出' : '图库为空，没有可导出的照片');
   const pending = exportable.filter(p => exportState.exported[p.id] !== p.updatedAt);
   const lastAt = exportState.lastAt ? new Date(exportState.lastAt).toLocaleString('zh-CN', { hour12: false }) : '';
-  const pendingMB = photoBytesOf(pending) * 1.37;
-  const allMB = photoBytesOf(exportable) * 1.37;
+  const pendingMB = photoBytesOf(pending);
+  const allMB = photoBytesOf(exportable);
 
   const choice = await new Promise(resolve => {
     const done = v => resolve(v);
     const { close, root } = makeModal(`
       <h3>导出备份</h3>
-      <p style="color:var(--muted);font-size:13px;line-height:1.8;margin:0 0 14px">换设备时：在旧设备导出，把文件传到新设备，在新设备的「上传 / 管理」页点「导入备份 JSON」。已有的照片会自动跳过，不会重复。</p>
+      <p style="color:var(--muted);font-size:13px;line-height:1.8;margin:0 0 14px">换设备时：在旧设备导出，把文件传到新设备，在新设备的「上传 / 管理」页点「导入备份文件」。已有的照片会自动跳过，不会重复。</p>
       <div class="modal-actions" style="flex-direction:column;gap:8px">
         <button class="btn-primary" data-act="delta" style="width:100%" ${pending.length ? '' : 'disabled'}>只导新增与修改 · ${pending.length} 张${pending.length ? ' · 约 ' + mbText(pendingMB) : '（已全部导出过）'}</button>
         <button class="btn-ghost" data-act="full" style="width:100%">全部导出 · ${exportable.length} 张 · 约 ${mbText(allMB)}</button>
@@ -5875,7 +6103,7 @@ async function exportBackup() {
   const list = choice === 'delta' ? pending : exportable;
   if (!list.length) return toast('没有需要导出的照片');
 
-  const estMB = Math.round(photoBytesOf(list) * 1.37 / 1048576);
+  const estMB = Math.round(photoBytesOf(list) / 1048576);
   if (estMB > 120) {
     const ok = await new Promise(resolve => {
       const { close, root } = makeModal(`
@@ -5896,29 +6124,34 @@ async function exportBackup() {
   showUploadProgress(choice === 'delta' ? '正在导出新增照片…' : '正在导出备份…');
   try {
     const exported = [];
+    const files = [];
     const total = list.length;
     for (let i = 0; i < total; i++) {
       const p = list[i];
       const o = { ...p };
-      if (p.blob) { o.blobData = await blobToDataURL(p.blob); delete o.blob; }
-      if (p.originalBlob) { o.originalBlobData = await blobToDataURL(p.originalBlob); delete o.originalBlob; }
-      if (p.videoBlob) { o.videoBlobData = await blobToDataURL(p.videoBlob); delete o.videoBlob; }
-      if (p.coverBlob) { o.coverBlobData = await blobToDataURL(p.coverBlob); delete o.coverBlob; }
+      const media = {};
+      if (p.blob) { const n = `photos/${p.id}.${zipExt(p.blob, 'jpg')}`; files.push({ name: n, blob: p.blob }); media.blob = n; delete o.blob; }
+      if (p.thumbBlob) { const n = `thumbs/${p.id}.${zipExt(p.thumbBlob, 'webp')}`; files.push({ name: n, blob: p.thumbBlob }); media.thumbBlob = n; delete o.thumbBlob; }
+      if (p.originalBlob) { const n = `originals/${p.id}.${zipExt(p.originalBlob, 'jpg')}`; files.push({ name: n, blob: p.originalBlob }); media.originalBlob = n; delete o.originalBlob; }
+      if (p.videoBlob) { const n = `videos/${p.id}.${zipExt(p.videoBlob, 'mp4')}`; files.push({ name: n, blob: p.videoBlob }); media.videoBlob = n; delete o.videoBlob; }
+      if (p.coverBlob) { const n = `covers/${p.id}.${zipExt(p.coverBlob, 'jpg')}`; files.push({ name: n, blob: p.coverBlob }); media.coverBlob = n; delete o.coverBlob; }
+      if (Object.keys(media).length) o.media = media;
       exported.push(o);
-      setUploadProgress((i + 1) / total * 90);
+      setUploadProgress((i + 1) / total * 80);
     }
-    const payload = { app: 'darkroom-gallery', version: 3, mode: choice, exportedAt: new Date().toISOString(),
+    const payload = { app: 'darkroom-gallery', version: 4, mode: choice, exportedAt: new Date().toISOString(),
       filmSim: state.settings.filmSim,
       albums: state.albums, sceneTypes: state.sceneTypes,
       homeSort: state.settings.homeSort, trashRetentionDays: state.settings.trashRetentionDays,
       heroTitle: state.settings.heroTitle || '', heroSub: state.settings.heroSub || '', photos: exported };
+    setUploadProgress(88);
+    files.unshift({ name: 'manifest.json', blob: new Blob([JSON.stringify(payload)], { type: 'application/json' }) });
+    const blob = await buildZip(files);
     setUploadProgress(96);
-    const json = JSON.stringify(payload, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `darkroom-${choice === 'delta' ? 'update' : 'backup'}-${localDateStr()}.json`;
+    a.download = `darkroom-${choice === 'delta' ? 'update' : 'backup'}-${localDateStr()}.zip`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
     setUploadProgress(100);
@@ -5945,10 +6178,24 @@ function dataURLToBlob(dataUrl) {
   return new Blob([arr], { type: mime });
 }
 
+function extToMime(name) {
+  const e = String(name || '').toLowerCase().split('.').pop();
+  return ({ jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', mp4: 'video/mp4', mov: 'video/quicktime', json: 'application/json' })[e] || 'application/octet-stream';
+}
 async function importBackup(file) {
-  let data;
-  try { data = JSON.parse(await file.text()); }
-  catch { throw new Error('bad format'); }
+  let data; let zipEntries = null;
+  const head = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+  const isZip = (head[0] === 0x50 && head[1] === 0x4B) || /\.zip$/i.test(file.name);
+  try {
+    if (isZip) {
+      zipEntries = await readZip(file);
+      const mf = zipEntries['manifest.json'];
+      if (!mf) throw new Error('bad format');
+      data = JSON.parse(await mf.text());
+    } else {
+      data = JSON.parse(await file.text());
+    }
+  } catch { throw new Error('bad format'); }
   if (!data || typeof data !== 'object' || !Array.isArray(data.photos)) throw new Error('bad format');
 
   // 1) 先在内存中逐张校验与转换；损坏记录跳过，避免写库到一半中断留下脏数据
@@ -5958,9 +6205,17 @@ async function importBackup(file) {
     try {
       if (!raw || typeof raw !== 'object') throw new Error('not object');
       const o = { ...raw };
-      const mediaFields = [['blobData', 'blob'], ['originalBlobData', 'originalBlob'], ['videoBlobData', 'videoBlob'], ['coverBlobData', 'coverBlob']];
+      const mediaFields = [['blobData', 'blob'], ['originalBlobData', 'originalBlob'], ['videoBlobData', 'videoBlob'], ['coverBlobData', 'coverBlob'], ['thumbBlobData', 'thumbBlob']];
       for (const [srcKey, dstKey] of mediaFields) {
         if (o[srcKey]) { o[dstKey] = dataURLToBlob(o[srcKey]); delete o[srcKey]; }
+      }
+      // ZIP 版备份：媒体以文件形式存在 zip 里，按 media 映射取回
+      if (zipEntries && o.media && typeof o.media === 'object') {
+        for (const k of ['blob', 'originalBlob', 'videoBlob', 'coverBlob', 'thumbBlob']) {
+          const path = o.media[k];
+          if (path && zipEntries[path]) o[k] = new Blob([zipEntries[path]], { type: extToMime(path) });
+        }
+        delete o.media;
       }
       if (o.kind !== 'photo' && o.kind !== 'polaroid' && o.kind !== 'live' && o.kind !== 'film') o.kind = 'photo';
       // 媒体完整性校验：视频需 videoBlob 或封面，其余需 blob
@@ -6283,6 +6538,26 @@ async function boot() {
   if (photoId) { const list = visiblePhotos().map(p => p.id); const idx = list.indexOf(photoId); if (idx >= 0) setTimeout(() => openLightbox(list, idx), 400); }
 }
 boot();
+
+/* 26. 添加到主屏幕（PWA）
+   只在 http(s) 下启用：本地双击打开的单文件不注入，避免 404 与无谓请求。
+   线上的 manifest.json / sw.js 与 index.html 同目录（docs/）。 */
+(function initPWA() {
+  if (!/^https?:$/.test(location.protocol)) return;
+  try {
+    if (!document.querySelector('link[rel="manifest"]')) {
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = 'manifest.json';
+      document.head.appendChild(link);
+    }
+  } catch (e) {}
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => {});
+    });
+  }
+})();
 </script>
 </body>
 </html>

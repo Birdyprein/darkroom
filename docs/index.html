@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="darkroom-version" content="1.4.0">
+<meta name="darkroom-version" content="1.4.1">
 <meta name="darkroom-release" content="2026-11-02">
-<meta name="darkroom-build" content="2026-11-02 22:13">
+<meta name="darkroom-build" content="2026-11-02 22:40">
 <title>暗房画廊 · Darkroom Gallery</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='45%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%23FFF8EC'/%3E%3Cstop offset='28%25' stop-color='%23E08A4E'/%3E%3Cstop offset='62%25' stop-color='%239E4E2A'/%3E%3Cstop offset='100%25' stop-color='%23171719'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23171719'/%3E%3Ccircle cx='32' cy='32' r='19' fill='url(%23g)'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23D08150' stroke-width='1.4' opacity='.5'/%3E%3Ccircle cx='32' cy='31.4' r='4.6' fill='%23FFFDF7' opacity='.97'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#161618">
@@ -118,7 +118,7 @@ body::after{content:"";position:fixed;inset:0;z-index:3;pointer-events:none;opac
 .back-btn:active{transform:scale(0.95);transition:transform 0.1s var(--fluid-damp);}
 .back-arrow{font-size:16px;line-height:1;margin-right:-2px;}
 
-.page{max-width:1280px;margin:0 auto;padding:0 24px 130px;}
+.page{max-width:1280px;margin:0 auto;padding:0 24px 180px;}
 .page-head{margin:36px 0 30px;}
 .page-head h1{font-family:var(--serif);font-weight:300;font-size:clamp(30px,5vw,52px);letter-spacing:.03em;margin:0 0 8px;line-height:1.15;}
 .page-desc{color:var(--muted);font-size:14px;letter-spacing:.08em;margin:0;}
@@ -223,7 +223,9 @@ body.select-mode .card-tools,body.select-mode .card-fav,body.select-mode .card-v
 .film-track:hover .frame{opacity:.45;filter:brightness(.55);}
 .film-track:hover .frame:hover{opacity:1;filter:none;transform:scale(1.07);}
 .film-track:hover .frame:hover img{filter:saturate(1) brightness(1);}
-.frame.selected{outline:3px solid var(--orange);outline-offset:-3px;box-shadow:inset 0 0 0 100px rgba(196,106,59,.2);}
+/* 选中态用覆盖层画：帧里的 img 带 filter，会盖住父元素的 outline，所以改成 ::after 压在最上面 */
+.frame.selected::after{content:"";position:absolute;inset:0;border:3px solid var(--orange);border-radius:inherit;background:rgba(196,106,59,.22);box-shadow:inset 0 0 0 1px rgba(0,0,0,.3);pointer-events:none;z-index:3;}
+.frame.selected::before{content:"✓";position:absolute;left:6px;top:5px;z-index:4;width:17px;height:17px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;line-height:17px;text-align:center;pointer-events:none;}
 body.select-mode .film-track:hover .frame{opacity:1;filter:none;}
 body.select-mode .film-track:hover .frame:hover{transform:scale(1.03);}
 .film-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--cream);font-size:20px;line-height:1;z-index:5;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .35s var(--ease),background .25s;user-select:none;}
@@ -597,6 +599,14 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 .foot-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--orange);margin-left:6px;vertical-align:middle;box-shadow:0 0 7px rgba(196,106,59,.85);animation:footDotPulse 2.4s ease-in-out infinite;}
 @keyframes footDotPulse{0%,100%{opacity:.5;transform:scale(.82);}50%{opacity:1;transform:scale(1.18);}}
 
+/* 首页板块的空位：一张都没选时的「＋ 添加照片」入口 */
+.pick-empty{padding:4px 0 2px;}
+.pick-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:100%;min-height:128px;border-radius:14px;border:1px dashed rgba(255,255,255,.16);background:rgba(255,255,255,.015);color:var(--muted);cursor:pointer;transition:border-color .25s,background .25s,color .25s;}
+.pick-add:hover{border-color:rgba(196,106,59,.5);background:rgba(196,106,59,.06);}
+.pick-plus{font-size:19px;line-height:1;color:var(--orange);}
+.pick-add-text{font-family:var(--serif);font-size:15px;letter-spacing:.08em;color:var(--cream);}
+.pick-add small{font-size:11.5px;letter-spacing:.05em;opacity:.55;text-align:center;padding:0 12px;line-height:1.6;}
+
 /* 更新日志（关于页） */
 #changelog{scroll-margin-top:96px;}
 .chg-item{position:relative;padding:0 0 20px 18px;border-left:1px solid rgba(255,255,255,.09);}
@@ -733,7 +743,7 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
   .month-block{margin-bottom:20px;}
 }
 @media (max-width:520px){
-  .page{padding:0 16px 120px;}
+  .page{padding:0 16px 152px;}
   .nav{width:calc(100% - 20px);padding:0 14px;}
   .album-grid{grid-template-columns:1fr;}
   .back-btn{padding:10px 18px;font-size:13px;}
@@ -936,8 +946,13 @@ body.lb-open .scroll-fabs{opacity:0;pointer-events:none;}
 
 <script>
 /* ============================================================
- * 暗房画廊 Darkroom Gallery · v1.4.0
- * 2026-11-02 更新：
+ * 暗房画廊 Darkroom Gallery · v1.4.1
+ * 2026-11-02 修复：
+ *  - 修复：故事墙忽略「管理」勾选、把拍立得全部显示；胶卷精选全部取消后仍自动凑一张
+ *  - 新增：两个板块无内容时显示「＋ 添加照片」，点击直达管理弹窗
+ *  - 修复：时间轴多选时选中照片无可见高亮（img 的 filter 让父级 outline 不可见），改用覆盖层 + 勾选角标
+ *  - 修复：右下角顶部/返回/底部按钮在页面底部压住页脚，且会盖住底部多选栏
+ * 2026-11-02 v1.4.0 更新：
  *  - 新增：页脚版本号可点击，悬停显示构建时间；「关于」页显示版本与构建时间
  *  - 新增：「关于」页增加更新日志，由 CHANGELOG 常量驱动，按版本倒序展示
  *  - 新增：有新版本时页脚出现橙点，点击直达本次更新内容，看过即消失
@@ -983,14 +998,21 @@ const navEl = $('#nav');
 const lbEl = $('#lightbox');
 const editorEl = $('#editor');
 /* 版本标识：改版时同步更新以下三项，另外还要改 <head> 里的 darkroom-version / release / build 三个 meta */
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.4.1';
 const APP_RELEASE = '2026-11-02';
-const APP_BUILD = '2026-11-02 22:13';
+const APP_BUILD = '2026-11-02 22:40';
 /* 构建时间与发布同一天时，展示只保留时分，避免一行里出现两个相同的日期 */
 const APP_BUILD_SHORT = APP_BUILD.indexOf(APP_RELEASE + ' ') === 0 ? APP_BUILD.slice(APP_RELEASE.length + 1) : APP_BUILD;
 
 /* 更新日志：新版发布时在最前面插入一条。tag 用「新增 / 修复 / 优化 / 变更」 */
 const CHANGELOG = [
+  { v: '1.4.1', date: '2026-11-02', items: [
+    ['修复', '故事墙不理会「管理」里的勾选，把拍立得全显示出来；现在只显示勾选过的照片'],
+    ['修复', '胶卷精选全部取消勾选后仍会自动凑一张；现在留空并提示添加照片'],
+    ['新增', '两个板块空着时显示「＋ 添加照片」，点一下直接打开对应的管理页'],
+    ['修复', '时间轴进入多选后，选中的照片看不出高亮（描边被图片遮住），改为覆盖层并加勾选角标'],
+    ['修复', '电脑端右下角「顶部 / 返回 / 底部」在滚到页面底部时压住页脚等内容；同时避开底部多选栏'],
+  ] },
   { v: '1.4.0', date: '2026-11-02', items: [
     ['新增', '页脚版本号可点击，悬停可看到构建时间；「关于」页显示版本与构建时间'],
     ['新增', '「关于」页增加更新日志，按版本倒序列出每次改了什么'],
@@ -1293,22 +1315,22 @@ const SEED_ALBUMS = [
   { id: 'film',   name: '胶片', desc: '过曝、漏光、颗粒，和一点意外。' }
 ];
 const SEED_PHOTOS = [
-  { s:'dr-a1', t:'折多山的晨雾', a:'travel', d:'2023-04-12', pl:'川西 · 折多山', h:1050, tags:['山','晨雾','旅行'], scene:'landscape' },
-  { s:'dr-a2', t:'海边的第七天', a:'travel', d:'2023-06-03', pl:'福建 · 平潭',   h:1000, tags:['海','旅行'], scene:'landscape' },
-  { s:'dr-a3', t:'午后窗台',     a:'daily',  d:'2023-02-18', pl:'家中',           h:820,  tags:['日常','光'], scene:'still' },
-  { s:'dr-a4', t:'地铁末班',     a:'city',   d:'2022-11-29', pl:'上海 · 人民广场', h:1120, tags:['城市','夜'], scene:'night' },
-  { s:'dr-a5', t:'老相机与信',   a:'film',   d:'2023-01-08', pl:'书房',           h:900,  tags:['胶片','静物'], scene:'still' },
+  { s:'dr-a1', f:['filmstrip'], t:'折多山的晨雾', a:'travel', d:'2023-04-12', pl:'川西 · 折多山', h:1050, tags:['山','晨雾','旅行'], scene:'landscape' },
+  { s:'dr-a2', f:['filmstrip'], t:'海边的第七天', a:'travel', d:'2023-06-03', pl:'福建 · 平潭',   h:1000, tags:['海','旅行'], scene:'landscape' },
+  { s:'dr-a3', f:['filmstrip'], t:'午后窗台',     a:'daily',  d:'2023-02-18', pl:'家中',           h:820,  tags:['日常','光'], scene:'still' },
+  { s:'dr-a4', f:['filmstrip'], t:'地铁末班',     a:'city',   d:'2022-11-29', pl:'上海 · 人民广场', h:1120, tags:['城市','夜'], scene:'night' },
+  { s:'dr-a5', f:['filmstrip'], t:'老相机与信',   a:'film',   d:'2023-01-08', pl:'书房',           h:900,  tags:['胶片','静物'], scene:'still' },
   { s:'dr-a6', t:'雨后的巷子',   a:'city',   d:'2023-03-21', pl:'杭州 · 河坊街',   h:1020, tags:['城市','雨'], scene:'street' },
   { s:'dr-a7', t:'胶片颗粒 No.3', a:'film',  d:'2023-05-14', pl:'—',              h:760,  tags:['胶片','黑白'], kind:'polaroid', scene:'still' },
-  { s:'dr-a8', t:'雪山下的经幡', a:'travel', d:'2023-04-15', pl:'川西 · 塔公',     h:1120, tags:['山','旅行'], scene:'landscape' },
+  { s:'dr-a8', f:['filmstrip'], t:'雪山下的经幡', a:'travel', d:'2023-04-15', pl:'川西 · 塔公',     h:1120, tags:['山','旅行'], scene:'landscape' },
   { s:'dr-a9', t:'一盏台灯',     a:'daily',  d:'2023-07-02', pl:'家中',           h:880,  tags:['日常','夜'], scene:'still' },
   { s:'dr-a10',t:'天台的风',     a:'city',   d:'2023-08-19', pl:'广州 · 天河',     h:980,  tags:['城市','风'], scene:'building' },
   { s:'dr-a11',t:'旧胶片盒',     a:'film',   d:'2022-12-05', pl:'—',              h:800,  tags:['胶片','黑白'], kind:'polaroid', scene:'still' },
-  { s:'dr-a12',t:'稻城的黄昏',   a:'travel', d:'2023-04-18', pl:'稻城 · 亚丁',     h:1080, tags:['山','黄昏','旅行'], scene:'landscape' },
-  { s:'dr-a13',t:'咖啡与书',     a:'daily',  d:'2023-09-11', pl:'街角咖啡',       h:840,  tags:['日常'], scene:'food' },
-  { s:'dr-a14',t:'霓虹招牌',     a:'city',   d:'2023-10-02', pl:'香港 · 旺角',     h:1100, tags:['城市','夜','霓虹'], scene:'night' },
+  { s:'dr-a12', f:['filmstrip'],t:'稻城的黄昏',   a:'travel', d:'2023-04-18', pl:'稻城 · 亚丁',     h:1080, tags:['山','黄昏','旅行'], scene:'landscape' },
+  { s:'dr-a13', f:['filmstrip'],t:'咖啡与书',     a:'daily',  d:'2023-09-11', pl:'街角咖啡',       h:840,  tags:['日常'], scene:'food' },
+  { s:'dr-a14', f:['filmstrip'],t:'霓虹招牌',     a:'city',   d:'2023-10-02', pl:'香港 · 旺角',     h:1100, tags:['城市','夜','霓虹'], scene:'night' },
   { s:'dr-a15',t:'夏日胶片',     a:'film',   d:'2023-07-30', pl:'—',              h:940,  tags:['胶片','夏日'], kind:'polaroid', scene:'landscape' },
-  { s:'dr-a16',t:'归途的火车',   a:'travel', d:'2023-11-23', pl:'成都 → 西安',     h:1000, tags:['旅行','火车'], scene:'street' }
+  { s:'dr-a16', f:['filmstrip'],t:'归途的火车',   a:'travel', d:'2023-11-23', pl:'成都 → 西安',     h:1000, tags:['旅行','火车'], scene:'street' }
 ];
 const EXIF_POOL = [
   { camera:'Fujifilm X-T4', lens:'XF 23mm f/1.4', iso:'ISO 400', aperture:'f/2.0', shutter:'1/250s', focal:'23mm' },
@@ -1324,6 +1346,8 @@ async function seedData() {
     const sceneObj = state.sceneTypes.find(x => x.id === s.scene);
     const tags = [...(s.tags || [])];
     if (sceneObj && !tags.includes(sceneObj.name)) tags.push(sceneObj.name);
+    const seedFeatured = [...(s.f || [])];
+    if (s.kind === 'polaroid' && !seedFeatured.includes('story')) seedFeatured.push('story');
     await idbPut('photos', {
       id: 'seed-' + s.s, title: s.t, date: s.d, place: s.pl, albumId: s.a,
       kind: s.kind || 'photo', tags, note: '', favorite: false,
@@ -1332,7 +1356,7 @@ async function seedData() {
       ratio: s.h / 800, exif: EXIF_POOL[i % EXIF_POOL.length],
       privacy: 'public', sortWeight: i, scene: s.scene || null,
       deletedAt: null, restoredAt: null, originalBlob: null, videoBlob: null, coverBlob: null,
-      featuredIn: [], extraAlbumIds: []
+      featuredIn: seedFeatured, extraAlbumIds: []
     });
   }
 }
@@ -1661,6 +1685,33 @@ window.addEventListener('scroll', () => { fabs.classList.toggle('visible', windo
 $('#fabTop').addEventListener('click', doScrollTop);
 $('#fabBottom').addEventListener('click', doScrollBottom);
 $('#fabBack').addEventListener('click', doScrollBack);
+
+/* 右下角三个浮动按钮：底部多选栏展开时整体抬到它上方，避免压住按钮 */
+(function watchFabOffset() {
+  const stack = $('#scrollFabs'); if (!stack) return;
+  const bars = ['#selectBar', '#trashSelectBar', '#albumSelectBar'];
+  let base = parseFloat(getComputedStyle(stack).bottom);
+  if (isNaN(base)) base = 30;
+  const sync = () => {
+    let lift = 0;
+    bars.forEach(sel => {
+      const bar = document.querySelector(sel);
+      if (!bar || !bar.classList.contains('open')) return;
+      const h = bar.offsetHeight;
+      if (!h) return;
+      let barBottom = parseFloat(getComputedStyle(bar).bottom);
+      if (isNaN(barBottom)) barBottom = 0;
+      lift = Math.max(lift, barBottom + h + 12 - base);
+    });
+    stack.style.bottom = (base + (lift > 0 ? lift : 0)) + 'px';
+  };
+  window.addEventListener('resize', sync);
+  if (window.MutationObserver) {
+    const mo = new MutationObserver(sync);
+    bars.forEach(sel => { const bar = document.querySelector(sel); if (bar) mo.observe(bar, { attributes: true, attributeFilter: ['class'] }); });
+  }
+  sync();
+})();
 
 /* 7. 瀑布流 */
 const masonryRegistry = [];
@@ -3472,38 +3523,36 @@ function todayFilmStyle(p) {
   const imgH = r >= 1 ? LONG : Math.round(LONG * r);
   return `--tf-w:${imgW + 22}px;--tf-ar:${imgW} / ${imgH}`;        // +22 = 卡片左右 padding 10×2 + 边框 1×2
 }
+// 故事墙：只显示管理页里勾选过的照片（featuredIn 含 story），不再自动收录拍立得
 function pickHomeStory(all) {
-  const manual = all.filter(p => (p.featuredIn || []).includes('story'));
-  const excluded = new Set(manual.map(p => p.id));
-  const auto = all.filter(p => p.kind === 'polaroid' && !excluded.has(p.id));
-  return [...sortPhotos(manual, 'newest'), ...sortPhotos(auto, 'newest')];
-}
-function pickFilmstripPhotos(list) {
-  const now = Date.now(); const thirtyDays = 30 * 86400000;
-  const filmOnly = list.filter(p => p.kind === 'film'); const photoOnly = list.filter(p => p.kind === 'photo');
-  const filmPicked = sortPhotos(filmOnly, 'newest').slice(0, 12);
-  if (filmPicked.length >= 12) return filmPicked;
-  const need = 12 - filmPicked.length;
-  const seen = new Set(filmPicked.map(p => p.id));
-  const recent = photoOnly.filter(p => { const t = p.createdAt || (p.date ? new Date(p.date).getTime() : 0); return now - t < thirtyDays && !seen.has(p.id); });
-  const photoPicked = [];
-  recent.forEach(p => { if (photoPicked.length < need) photoPicked.push(p); });
-  if (photoPicked.length < need) {
-    const sorted = sortPhotos(photoOnly, 'newest');
-    for (const p of sorted) { if (photoPicked.length >= need) break; if (!seen.has(p.id)) { photoPicked.push(p); seen.add(p.id); } }
-  }
-  return [...filmPicked, ...photoPicked];
+  return sortPhotos(all.filter(p => (p.featuredIn || []).includes('story')), 'newest');
 }
 function pickHomeFilmstrip(all) {
   const sceneFilter = __homeSceneFilter;
-  let pool = sceneFilter ? all.filter(p => p.scene === sceneFilter) : all;
-  const manual = pool.filter(p => (p.featuredIn || []).includes('filmstrip'));
-  const manualIdSet = new Set(manual.map(p => p.id));
+  const pool = sceneFilter ? all.filter(p => p.scene === sceneFilter) : all;
   const flagSet = new Set(state.albums.filter(a => a.showOnFilmstrip).map(a => a.id));
-  const fromAlbums = pool.filter(p => !manualIdSet.has(p.id) && albumsOf(p).some(a => flagSet.has(a.id)));
-  const excludedIdSet = new Set([...manual, ...fromAlbums].map(p => p.id));
-  const auto = pickFilmstripPhotos(pool.filter(p => !excludedIdSet.has(p.id)));
-  return [...manual, ...fromAlbums, ...auto].slice(0, 12);
+  const manual = pool.filter(p => (p.featuredIn || []).includes('filmstrip'));
+  const manualIds = new Set(manual.map(p => p.id));
+  // 相册里勾了「设为首页精选来源」的照片也算选中，其余不再自动凑数
+  const fromAlbums = pool.filter(p => !manualIds.has(p.id) && albumsOf(p).some(a => flagSet.has(a.id)));
+  return [...manual, ...fromAlbums];
+}
+// 从 1.4.1 起首页两个板块完全由「管理」里的勾选决定；升级时把原先自动进故事墙的拍立得
+// 一次性固化成选中状态，这样老用户的故事墙不会突然空掉，之后取消勾选就真的不显示了
+async function migrateHomeFeatured() {
+  const done = await idbGet('settings', 'homeFeaturedMigrated');
+  if (done && done.value) return;
+  let changed = 0;
+  for (const p of state.photos) {
+    if (p.deletedAt) continue;
+    if (p.kind !== 'polaroid') continue;
+    const list = p.featuredIn || [];
+    if (list.includes('story')) continue;
+    p.featuredIn = [...list, 'story'];
+    try { await idbPut('photos', p); changed++; } catch (e) { console.warn('故事墙迁移失败', p.id, e); }
+  }
+  await idbPut('settings', { key: 'homeFeaturedMigrated', value: true }).catch(() => {});
+  if (changed) console.info('[暗房] 已把 ' + changed + ' 张拍立得固化为故事墙选中');
 }
 
 function openHomeFeaturePicker(flag) {
@@ -3700,8 +3749,7 @@ function renderHome() {
   let active = __homeActiveFilter;
   let sceneFilter = __homeSceneFilter;
 
-  // 故事墙渲染：不再截断张数，管理页里选中的照片全部展示；溢出时可左右箭头 / 拖拽滚动
-  // 内容没变化就跳过重渲染，避免切换分类 / 展开收起时拍立得整排闪一下
+  // 故事墙渲染：只显示「管理」里勾选的照片；内容没变化就跳过重渲染，避免切换分类时整排闪一下
   let storyKey = null;
   const renderStorySection = () => {
     const box = $('#polaroidPreview'); if (!box) return;
@@ -3711,9 +3759,16 @@ function renderHome() {
     storyKey = key;
     box.innerHTML = list.length
       ? storyStripHTML(list)
-      : `<div class="empty" style="position:static;padding:20px;font-size:13px">${all.length
-          ? '故事墙还是空的——在照片详情页点「更多 → 在故事墙展示」，或把照片标记为「拍立得」'
-          : '上传照片后，拍立得或手动标记的照片会出现在故事墙'}</div>`;
+      : (all.length ? homePickEmptyHTML('story')
+                    : `<div class="empty" style="position:static;padding:20px;font-size:13px">上传照片后，可以把喜欢的几张放到故事墙</div>`);
+    box.querySelectorAll('[data-manage]').forEach(b => b.addEventListener('click', () => openHomeFeaturePicker(b.dataset.manage)));
+  };
+  // 胶卷精选：同样只显示勾选过的照片；一张都没选时给一个「添加照片」入口
+  const renderFilmSection = () => {
+    const box = $('#filmStripBox'); if (!box) return;
+    const list = pickHomeFilmstrip(all);
+    box.innerHTML = list.length ? filmstripHTML(list) : homePickEmptyHTML('filmstrip');
+    box.querySelectorAll('[data-manage]').forEach(b => b.addEventListener('click', () => openHomeFeaturePicker(b.dataset.manage)));
   };
 
   const apply = () => {
@@ -3734,7 +3789,7 @@ function renderHome() {
           ${trashedCount > 0 ? `<p style="margin:24px 0 0;font-size:12px;color:var(--muted)">回收站里还有 ${trashedCount} 张照片，<a href="#/trash" style="color:var(--orange)">去看看 →</a></p>` : ''}
         </div>`;
       wall.style.height = 'auto';
-      $('#filmStripBox').innerHTML = `<div class="empty" style="padding:20px;font-size:13px">上传照片后，胶卷精选会自动挑选并展示在这里</div>`;
+      $('#filmStripBox').innerHTML = `<div class="empty" style="padding:20px;font-size:13px">上传照片后，可以把喜欢的几张放到胶卷精选</div>`;
       __homeLastSorted = [];
       __homeFilteredIds = [];
       return;
@@ -3769,7 +3824,7 @@ function renderHome() {
           <p style="margin:8px 0 0;font-size:13px;color:var(--muted)">换个筛选条件试试</p>
         </div>`;
       wall.style.height = 'auto';
-      $('#filmStripBox').innerHTML = filmstripHTML(pickHomeFilmstrip(all));
+      renderFilmSection();
       initAllStrips();
       __homeLastSorted = [];
       requestAnimationFrame(() => { requestAnimationFrame(() => initQuickNav([])); });
@@ -3795,7 +3850,7 @@ function renderHome() {
     } else if (expandWrap) {
       expandWrap.style.display = 'none';
     }
-    $('#filmStripBox').innerHTML = filmstripHTML(pickHomeFilmstrip(all));
+    renderFilmSection();
     initAllStrips();
     __homeLastSorted = rendered;
     requestAnimationFrame(() => { requestAnimationFrame(() => initQuickNav(rendered)); });
@@ -3889,6 +3944,17 @@ function storyStripHTML(photos) {
   </div>`;
 }
 function hashStr(s) { let h = 0; for (let i = 0; i < String(s).length; i++) h = (h * 31 + String(s).charCodeAt(i)) >>> 0; return h; }
+// 首页两个板块一张都没选时的空位：点一下直接打开对应的管理弹窗
+function homePickEmptyHTML(kind) {
+  const label = kind === 'filmstrip' ? '胶卷精选' : '故事墙';
+  return `<div class="pick-empty">
+      <button class="pick-add" data-manage="${kind}">
+        <span class="pick-plus" aria-hidden="true">＋</span>
+        <span class="pick-add-text">添加照片</span>
+        <small>从图库里挑选要出现在${label}的照片</small>
+      </button>
+    </div>`;
+}
 
 function initAllStrips() {
   $$('.filmstrip').forEach(strip => {
@@ -6170,6 +6236,8 @@ async function boot() {
     await openDB();
     await loadExportState();
     state.photos = await idbAll('photos'); state.albums = await idbAll('albums');
+    // 1.4.1：首页两个板块改为「只显示管理里勾选的」，先把老的自动进墙照片固化一次
+    await migrateHomeFeatured();
     const seeded = await idbGet('settings', 'seeded');
     if (!seeded) {
       const ct = await idbGet('settings', 'sceneTypes');
